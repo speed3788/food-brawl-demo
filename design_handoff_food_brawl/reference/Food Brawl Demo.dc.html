@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet"><style>
+html,body{margin:0;background:#d9d0bc;background-image:radial-gradient(120% 80% at 50% 0%,rgba(255,255,255,.5),transparent 70%),repeating-linear-gradient(96deg,rgba(120,95,50,.05) 0 3px,transparent 3px 9px);font-family:'Newsreader',Georgia,serif}
+a{color:#a8781c}a:hover{color:#8a6110}
+input[type=range]{accent-color:#a8781c}
+*::-webkit-scrollbar{width:0;height:0}
+</style></helmet>
+
+<div style="min-height:100vh;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:40px;padding:32px 24px;flex-wrap:wrap">
+
+<div style="width:300px;display:flex;flex-direction:column;gap:14px;color:#2b271f">
+  <div style="font-family:'Patrick Hand',cursive;font-size:40px;line-height:1">Food Brawl</div>
+  <div style="font-size:14px;font-style:italic;color:#6b6250;margin-top:-8px">Winner picks dinner!</div>
+  <div style="font-size:14px;line-height:1.6;color:#5d5544">Playable demo. Everything you set is written to this device's local storage — reload and it comes back. No servers anywhere in the build.</div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#bdae8c 0 5px,transparent 5px 10px)"></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#8a7c5c;letter-spacing:.12em">DEMO CONTROLS</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="font-size:12px;font-style:italic;color:#7d7460">Platform</div>
+      <div style="display:flex;gap:6px">
+        <sc-for list="{{ platformOpts }}" as="o" hint-placeholder-count="2">
+          <button onClick="{{ o.pick }}" style="all:unset;cursor:pointer;flex:1;text-align:center;padding:9px 0;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }};border-radius:3px;font-family:'Patrick Hand',cursive;font-size:20px">{{ o.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="font-size:12px;font-style:italic;color:#7d7460">Plan</div>
+      <div style="display:flex;gap:6px">
+        <sc-for list="{{ planOpts }}" as="o" hint-placeholder-count="2">
+          <button onClick="{{ o.pick }}" style="all:unset;cursor:pointer;flex:1;text-align:center;padding:9px 0;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }};border-radius:3px;font-family:'Patrick Hand',cursive;font-size:20px">{{ o.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="font-size:12px;font-style:italic;color:#7d7460;line-height:1.5">{{ planNote }}</div>
+  </div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#bdae8c 0 5px,transparent 5px 10px)"></div>
+  <div style="font:9.5px/1.9 ui-monospace,Menlo,monospace;color:#7d7460;letter-spacing:.05em">SET A NAME &amp; INGREDIENT<br>PICK BUDGET · DISTANCE · FIELD<br>BACK A RUNNER IN THE PADDOCK<br>HAND THE OTHERS TO THE ROOM<br>TAP THROUGH TONIGHT'S GAME<br>OPEN A DEEP LINK FROM THE CARD<br>CHECK THE ALMANAC · BUY PRO</div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#bdae8c 0 5px,transparent 5px 10px)"></div>
+  <div style="font-size:13px;font-style:italic;line-height:1.6;color:#6b6250">Every restaurant name here is invented — stand-ins for the Google Places response, shaped exactly as the real query returns them. None of it ships: <b>spotsFor()</b> is the single seam the live query replaces. The almanac deliberately stores only the food and the date, never a restaurant name, which Places terms don't permit keeping. The corgis, the track and the ingredient avatars are all your artwork; photo strips are empty frames the real build fills from the Places photo references. Deep links show the URL they would fire rather than leaving the page.</div>
+  <button onClick="{{ wipe }}" style="all:unset;cursor:pointer;font-size:13px;font-style:italic;color:#a8781c;border-bottom:1px solid rgba(168,120,28,.4);align-self:flex-start">Reset the demo to first run</button>
+</div>
+
+<x-import component-from-global-scope="{{ deviceComp }}" from="./ios-frame.jsx ./android-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;box-sizing:border-box;display:flex;flex-direction:column;position:relative;overflow:hidden;background:#f7f0dd;background-image:radial-gradient(120% 90% at 12% 0%,rgba(255,255,255,.7),transparent 60%),radial-gradient(90% 70% at 88% 100%,rgba(180,150,95,.2),transparent 65%),repeating-linear-gradient(102deg,rgba(120,95,50,.045) 0 2px,transparent 2px 6px),repeating-linear-gradient(8deg,rgba(120,95,50,.035) 0 1px,transparent 1px 5px);font-family:'Newsreader',Georgia,serif;color:#2b271f">
+
+<sc-if value="{{ isSetup }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;overflow:auto;padding:74px 26px 40px;display:flex;flex-direction:column;gap:24px">
+  <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px">
+    <img src="art/logo.png" alt="Food Brawl" style="width:236px;max-width:100%;height:auto;display:block">
+    <div style="font-family:'Patrick Hand',cursive;font-size:30px;line-height:1;color:#57764b">Winner picks dinner!</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;justify-content:center">
+    <div style="height:1px;width:64px;background:linear-gradient(90deg,transparent,#cbbb95)"></div>
+    <div style="width:9px;height:9px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(45deg);opacity:.75"></div>
+    <div style="width:6px;height:6px;background:#a8781c;border-radius:50%;opacity:.55"></div>
+    <div style="width:9px;height:9px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(225deg);opacity:.75"></div>
+    <div style="height:1px;width:64px;background:linear-gradient(270deg,transparent,#cbbb95)"></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="font-family:'Patrick Hand',cursive;font-size:24px">What shall we call you?</div>
+    <input type="text" value="{{ name }}" onChange="{{ setName }}" placeholder="Bradley" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.42);border:1px solid #cbbb95;border-radius:3px;padding:13px 14px;font-family:'Patrick Hand',cursive;font-size:26px;color:#2b271f;outline:none">
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="font-family:'Patrick Hand',cursive;font-size:24px">Pick an ingredient</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <sc-for list="{{ avatars }}" as="a" hint-placeholder-count="6">
+        <button onClick="{{ a.pick }}" style="all:unset;cursor:pointer;padding:9px 6px 7px;border-radius:5px;border:{{ a.ring }};background:{{ a.bg }};display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:{{ a.shadow }}">
+          <div style="width:100%;height:52px;background-image:{{ a.imgCss }};background-size:contain;background-position:center;background-repeat:no-repeat"></div>
+          <div style="font-size:11px;font-style:italic;color:#6b6250;text-align:center;line-height:1.25">{{ a.name }}</div>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="flex:1"></div>
+  <button onClick="{{ finishSetup }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:26px;box-shadow:0 3px 0 rgba(43,39,31,.28)">Start Brawl!</button>
+  <div style="text-align:center;font-size:12.5px;font-style:italic;color:#7d7460;line-height:1.5">Saved to your device only. No account, no cloud, nothing to log into.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:66px 26px 24px;display:flex;flex-direction:column;gap:20px">
+  <div style="display:flex;align-items:center;gap:13px">
+    <div style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid #cbbb95;background:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center">
+      <div style="width:34px;height:34px;background-image:{{ avatarCss }};background-size:contain;background-position:center;background-repeat:no-repeat"></div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:12.5px;font-style:italic;color:#7d7460">{{ greeting }}</div>
+      <div style="font-family:'Patrick Hand',cursive;font-size:30px;line-height:1.3">{{ displayName }}</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:'Patrick Hand',cursive;font-size:28px;color:#a8781c">{{ raceCount }}</div>
+      <div style="font:8.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.08em">SETTLED</div>
+    </div>
+  </div>
+  <div style="flex:none;border:1px solid #cbbb95;border-radius:6px;background:rgba(255,255,255,.42);padding:18px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden">
+    <div style="position:absolute;right:-14px;top:-14px;width:64px;height:64px;background:#57764b;opacity:.1;border-radius:50% 0 50% 0"></div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">TONIGHT'S RACE</div><div style="font-size:11.5px;font-style:italic;color:#9b8f73">{{ dailyNote }}</div></div>
+      <div style="font-family:'Patrick Hand',cursive;font-size:40px;line-height:1.28;margin-top:5px">{{ gameName }}</div>
+      <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:3px">{{ raceLenLabel }} · {{ gameDir }}</div>
+    </div>
+    <div style="position:relative;flex:none;height:150px;border:1px solid #cbbb95;border-radius:5px;overflow:hidden;background-color:{{ shotBg }};background-image:{{ shotCss }};background-size:{{ shotSize }};background-position:{{ shotPos }};background-repeat:no-repeat">
+      <div style="position:absolute;left:0;top:0;padding:2px 8px;font:8.5px/1.5 ui-monospace,Menlo,monospace;color:#f7f0dd;background:rgba(43,39,31,.75);letter-spacing:.06em;border-radius:0 0 3px 0;white-space:nowrap">{{ gameName }}</div>
+      <button onClick="{{ changeGame }}" style="all:unset;cursor:pointer;position:absolute;right:6px;bottom:6px;padding:5px 11px;border-radius:3px;background:{{ pickBg }};color:{{ pickFg }};border:1px solid {{ pickBorder }};font-family:'Patrick Hand',cursive;font-size:18px;line-height:1.2">{{ pickLabel }}</button>
+    </div>
+    <div style="font-size:13px;font-style:italic;color:#6b6250;line-height:1.45">{{ gameDesc }}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div style="font-size:13px;font-style:italic;color:#7d7460">{{ filterSummary }}</div>
+      <button onClick="{{ toFilters }}" style="all:unset;cursor:pointer;font-size:13px;font-style:italic;color:#a8781c;border-bottom:1px solid rgba(168,120,28,.4);white-space:nowrap">Change</button>
+    </div>
+    <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:7px">
+      <sc-for list="{{ fieldPreview }}" as="f" hint-placeholder-count="5">
+        <div style="padding:6px 12px;border:1px solid #d6c8a4;border-radius:999px;background:rgba(255,255,255,.5);font-size:13px;display:flex;align-items:center;gap:7px">
+          <span style="width:7px;height:7px;border-radius:50% 0 50% 0;background:{{ f.tone }};transform:rotate(45deg)"></span>{{ f.name }}
+        </div>
+      </sc-for>
+    </div>
+    <button onClick="{{ toPaddock }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:28px;box-shadow:0 3px 0 rgba(43,39,31,.28)">{{ runLabel }}</button>
+  </div>
+  <sc-if value="{{ hasHistory }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div style="font-family:'Patrick Hand',cursive;font-size:24px">Lately</div>
+        <button onClick="{{ toAlmanac }}" style="all:unset;cursor:pointer;font-size:12.5px;font-style:italic;color:#a8781c">the whole almanac</button>
+      </div>
+      <sc-for list="{{ recent }}" as="h" hint-placeholder-count="2">
+        <div style="display:flex;align-items:baseline;gap:10px;font-size:14px;padding-bottom:8px;border-bottom:1px dotted rgba(120,95,50,.3)">
+          <div style="font:9.5px/1.6 ui-monospace,Menlo,monospace;color:#9b8f73;width:52px;flex:none">{{ h.when }}</div>
+          <div style="flex:1;min-width:0"><span style="font-family:'Patrick Hand',cursive;font-size:20px">{{ h.winner }}</span> <span style="font-style:italic;color:#7d7460">{{ h.detail }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+  <sc-if value="{{ noHistory }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px dashed #cbbb95;border-radius:6px;padding:20px;text-align:center;font-size:13.5px;font-style:italic;color:#7d7460;line-height:1.6">The almanac is empty. Win a race and it starts keeping score.</div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isFilters }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:66px 26px 24px;display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;justify-content:space-between;align-items:baseline">
+    <div>
+      <div style="font-family:'Patrick Hand',cursive;font-size:38px;line-height:1.26">Set the rules</div>
+      <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">These become the search when someone wins.</div>
+    </div>
+    <button onClick="{{ toHome }}" style="all:unset;cursor:pointer;font-size:13px;font-style:italic;color:#a8781c">back</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="font-family:'Patrick Hand',cursive;font-size:23px">Budget</div>
+    <div style="display:flex;gap:9px">
+      <sc-for list="{{ budgets }}" as="b" hint-placeholder-count="4">
+        <button onClick="{{ b.pick }}" style="all:unset;cursor:pointer;flex:1;text-align:center;padding:13px 0;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }};border-radius:3px;font-family:'Patrick Hand',cursive;font-size:22px">{{ b.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font-family:'Patrick Hand',cursive;font-size:23px">How far you'll go</div>
+      <div style="font-family:'Patrick Hand',cursive;font-size:23px;color:#a8781c">{{ distanceLabel }}</div>
+    </div>
+    <input type="range" min="1" max="15" step="1" value="{{ distance }}" onChange="{{ setDistance }}" style="width:100%">
+    <div style="display:flex;justify-content:space-between;font-size:11.5px;font-style:italic;color:#8a8069"><span>next street</span><span>worth the drive</span></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font-family:'Patrick Hand',cursive;font-size:23px">Who's running</div>
+      <div style="font-size:12.5px;font-style:italic;color:#8a8069">{{ fieldLabel }}</div>
+    </div>
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">CATEGORY</div>
+    <div style="display:flex;flex-wrap:wrap;gap:9px">
+      <sc-for list="{{ runCats }}" as="c" hint-placeholder-count="12">
+        <button onClick="{{ c.toggle }}" style="all:unset;cursor:pointer;padding:9px 15px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};border-radius:999px;font-size:15px;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50% 0 50% 0;background:{{ c.dot }};transform:rotate(45deg)"></span>{{ c.name }}
+        </button>
+      </sc-for>
+    </div>
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em;margin-top:3px">FOOD</div>
+    <div style="display:flex;flex-wrap:wrap;gap:9px">
+      <sc-for list="{{ runFoods }}" as="c" hint-placeholder-count="12">
+        <button onClick="{{ c.toggle }}" style="all:unset;cursor:pointer;padding:9px 15px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};border-radius:999px;font-size:15px;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50% 0 50% 0;background:{{ c.dot }};transform:rotate(45deg)"></span>{{ c.name }}
+        </button>
+      </sc-for>
+    </div>
+    <sc-if value="{{ hasRunCustoms }}" hint-placeholder-val="{{ false }}">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em;margin-top:3px">YOURS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:9px">
+      <sc-for list="{{ runCustoms }}" as="c" hint-placeholder-count="12">
+        <button onClick="{{ c.toggle }}" style="all:unset;cursor:pointer;padding:9px 15px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};border-radius:999px;font-size:15px;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50% 0 50% 0;background:{{ c.dot }};transform:rotate(45deg)"></span>{{ c.name }}
+        </button>
+      </sc-for>
+    </div>
+    </sc-if>
+  </div>
+  <div style="flex:1"></div>
+  <button onClick="{{ saveFilters }}" style="all:unset;cursor:pointer;text-align:center;background:{{ startBg }};color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:26px;box-shadow:0 3px 0 rgba(43,39,31,.28)">{{ startLabel }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPaddock }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:66px 26px 24px;display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;justify-content:space-between;align-items:baseline">
+    <div>
+      <div style="font-family:'Patrick Hand',cursive;font-size:38px;line-height:1.26">Tonight's field</div>
+      <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">{{ gameName }} · {{ raceLenLabel }}</div>
+    </div>
+    <button onClick="{{ toHome }}" style="all:unset;cursor:pointer;font-size:13px;font-style:italic;color:#a8781c">back</button>
+  </div>
+  <div style="font-size:14px;color:#5d5544;line-height:1.55;border-left:2px solid #cbbb95;padding-left:12px">Tap a runner to say who's backing it. One person can back several, and two people can share one.</div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <sc-for list="{{ roster }}" as="r" hint-placeholder-count="5">
+      <div style="display:flex;align-items:center;gap:9px;padding:10px 11px;border:1px solid {{ r.border }};background:{{ r.bg }};border-radius:5px;box-shadow:{{ r.shadow }}">
+        <button onClick="{{ r.open }}" style="all:unset;cursor:pointer;flex:1;min-width:0;display:flex;align-items:center;gap:11px">
+          <div style="width:52px;height:42px;flex:none;background-image:{{ r.imgCss }};background-size:contain;background-position:center;background-repeat:no-repeat"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Patrick Hand',cursive;font-size:24px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</div>
+            <div style="font-size:12px;font-style:italic;color:#7d7460;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.silks }}</div>
+          </div>
+        </button>
+        <button onClick="{{ r.open }}" style="all:unset;cursor:pointer;flex:none;display:flex;align-items:center;gap:4px;padding:5px 9px;border:1px dashed #b9a67c;border-radius:999px;background:rgba(255,255,255,.4)">
+          <sc-for list="{{ r.chips }}" as="c" hint-placeholder-count="0">
+            <span style="width:17px;height:17px;flex:none;background-image:{{ c.imgCss }};background-size:contain;background-position:center;background-repeat:no-repeat"></span>
+          </sc-for>
+          <sc-if value="{{ r.noChips }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;color:#8a8069;white-space:nowrap">+ back</span></sc-if>
+        </button>
+      </div>
+    </sc-for>
+  </div>
+  <div style="font-size:12.5px;font-style:italic;color:#8a8069;line-height:1.5">{{ backerSummary }}</div>
+  <div style="flex:1"></div>
+  <button onClick="{{ startRace }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:26px;box-shadow:0 3px 0 rgba(43,39,31,.28)">To the starting line</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRace }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:56px 0 22px;display:flex;flex-direction:column">
+  <div style="padding:0 24px;display:flex;justify-content:space-between;align-items:baseline">
+    <div style="font-family:'Patrick Hand',cursive;font-size:30px">{{ raceHeadline }}</div>
+    <div style="font-family:'Patrick Hand',cursive;font-size:26px;color:#a8781c">{{ clock }}</div>
+  </div>
+<sc-if value="{{ isPlinko }}" hint-placeholder-val="{{ false }}">
+  <div style="margin:10px 14px 0;position:relative;height:520px;border:1px solid #7d6f4d;border-radius:5px;overflow:hidden;background-color:#cfd6b4;background-image:url('art/board_background.png');background-size:100% 100%">
+    <sc-for list="{{ pegs }}" as="g" hint-placeholder-count="40">
+      <div style="position:absolute;left:{{ g.x }}px;top:{{ g.y }}px;width:{{ g.d }}px;height:{{ g.d }}px;transform:translate(-50%,-50%);background-image:{{ g.art }};background-size:contain;background-repeat:no-repeat"></div>
+    </sc-for>
+    <sc-for list="{{ bumpers }}" as="g" hint-placeholder-count="6">
+      <div style="position:absolute;left:{{ g.x }}px;top:{{ g.y }}px;width:{{ g.d }}px;height:{{ g.d }}px;transform:translate(-50%,-50%);background-image:{{ g.art }};background-size:contain;background-repeat:no-repeat;filter:drop-shadow(0 2px 3px rgba(43,39,31,.4))"></div>
+    </sc-for>
+    <div style="position:absolute;left:0;right:0;top:456px;height:3px;background:repeating-linear-gradient(90deg,#2b271f 0 8px,transparent 8px 16px);opacity:.65"></div>
+    <sc-for list="{{ balls }}" as="b" hint-placeholder-count="6">
+      <div style="position:absolute;left:{{ b.x }}px;top:{{ b.y }}px;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:1px;pointer-events:none">
+        <div style="width:{{ b.d }}px;height:{{ b.d }}px;background-image:{{ b.art }};background-size:contain;background-repeat:no-repeat;filter:drop-shadow(0 2px 3px rgba(43,39,31,.45));transform:rotate({{ b.rot }}deg)"></div>
+        <div style="padding:0 3px;border-radius:2px;background:rgba(43,39,31,.82);font:7.5px/1.5 ui-monospace,Menlo,monospace;color:#f7f0dd;letter-spacing:.03em;white-space:nowrap">{{ b.name }}</div>
+        <div style="padding:0 4px;border-radius:2px;background:rgba(247,240,221,.88);font-family:'Patrick Hand',cursive;font-size:14px;line-height:1.2;color:#2b271f;white-space:nowrap;opacity:{{ b.backerOpacity }}">{{ b.backer }}</div>
+      </div>
+    </sc-for>
+    <sc-for list="{{ sparks }}" as="p" hint-placeholder-count="0">
+      <div style="position:absolute;left:{{ p.x }}px;top:{{ p.y }}px;width:{{ p.s }}px;height:{{ p.s }}px;transform:translate(-50%,-50%) rotate({{ p.rot }}deg);background-image:url('art/boost_spark_effect.png');background-size:contain;background-repeat:no-repeat;opacity:{{ p.o }};pointer-events:none"></div>
+    </sc-for>
+    <div style="position:absolute;right:8px;top:8px;padding:3px 8px;border-radius:3px;background:rgba(43,39,31,.72);font:9px/1.4 ui-monospace,Menlo,monospace;color:#f7f0dd;letter-spacing:.06em">{{ plinkoMeta }}</div>
+  </div>
+</sc-if>
+<sc-if value="{{ isFrog }}" hint-placeholder-val="{{ false }}">
+  <div style="margin:12px 14px 0;position:relative;height:{{ pondH }}px;border:1px solid #8a7c5c;border-radius:4px;overflow:hidden;background-color:#8aacb4;background-image:url('art/frogjump_board.png');background-size:cover;background-position:top center;background-repeat:no-repeat">
+    <sc-for list="{{ pondPads }}" as="p" hint-placeholder-count="40">
+      <div style="position:absolute;left:{{ p.left }};top:{{ p.top }};transform:translate(-50%,-50%);width:34px;height:19px;z-index:{{ p.z }};background-image:{{ p.art }};background-size:contain;background-position:center;background-repeat:no-repeat;filter:drop-shadow(0 1px 1px rgba(43,39,31,.28))"></div>
+    </sc-for>
+    <sc-for list="{{ pondSparks }}" as="p" hint-placeholder-count="0">
+      <div style="position:absolute;left:{{ p.left }};top:{{ p.top }};width:{{ p.s }}px;height:{{ p.s }}px;background:{{ p.c }};border-radius:50% 0 50% 0;transform:rotate({{ p.r }}deg);opacity:{{ p.o }};pointer-events:none;z-index:400"></div>
+    </sc-for>
+    <sc-for list="{{ pondFrogs }}" as="l" hint-placeholder-count="5">
+      <div style="position:absolute;left:{{ l.left }};top:{{ l.top }};transform:translate(-50%,-100%);z-index:{{ l.z }};display:flex;flex-direction:column;align-items:center;gap:1px;pointer-events:none">
+        <div style="padding:0 5px;border-radius:2px;background:rgba(247,240,221,.9);font-family:'Patrick Hand',cursive;font-size:14px;line-height:1.15;color:#2b271f;white-space:nowrap;opacity:{{ l.backerOpacity }}">{{ l.backer }}</div>
+        <div style="padding:1px 5px;border-radius:2px;background:rgba(247,240,221,.9);font-size:10.5px;font-style:italic;color:#3f3a2c;line-height:1.3;white-space:nowrap">{{ l.name }}</div>
+        <div style="width:{{ l.fw }}px;height:{{ l.fh }}px;background-image:{{ l.art }};background-size:contain;background-position:center bottom;background-repeat:no-repeat;filter:drop-shadow(0 2px 3px rgba(43,39,31,.4))"></div>
+      </div>
+    </sc-for>
+  </div>
+</sc-if>
+<sc-if value="{{ isCorgi }}" hint-placeholder-val="{{ true }}">
+  <div style="margin:14px 14px 0;position:relative;border:1px solid #9c8a5f;border-radius:4px;overflow:hidden;background-color:#a89a6f;background-image:url('art/track.png');background-size:100% auto;background-position:top center;background-repeat:no-repeat">
+    <div style="height:64px"></div>
+    <sc-for list="{{ lanes }}" as="l" hint-placeholder-count="5">
+      <div style="position:relative;height:66px;border-bottom:1px dotted rgba(43,39,31,.28)">
+        <div style="position:absolute;left:34px;right:26px;top:0;bottom:0">
+          <div style="position:absolute;top:58%;left:{{ l.left }};transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:1px;pointer-events:none">
+            <div style="padding:0 5px;border-radius:2px;background:rgba(247,240,221,.86);font-family:'Patrick Hand',cursive;font-size:15px;line-height:1.18;color:#2b271f;white-space:nowrap;opacity:{{ l.backerOpacity }}">{{ l.backer }}</div>
+            <div style="padding:1px 6px;border-radius:2px;background:rgba(247,240,221,.86);font-size:11px;font-style:italic;color:#3f3a2c;line-height:1.3;white-space:nowrap">{{ l.name }}</div>
+            <div style="width:54px;height:36px;background-image:{{ l.imgCss }};background-size:contain;background-position:center bottom;background-repeat:no-repeat;filter:drop-shadow(0 2px 2px rgba(43,39,31,.35))"></div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+    <sc-for list="{{ petals }}" as="p" hint-placeholder-count="0">
+      <div style="position:absolute;left:{{ p.x }}px;top:{{ p.y }}px;width:{{ p.s }}px;height:{{ p.s }}px;background:{{ p.c }};border-radius:50% 0 50% 0;transform:rotate({{ p.r }}deg);opacity:{{ p.o }};pointer-events:none"></div>
+    </sc-for>
+  </div>
+</sc-if>
+  <div style="flex:1"></div>
+  <div style="padding:0 26px;display:flex;flex-direction:column;gap:12px;align-items:center">
+    <div style="font-size:13px;font-style:italic;color:#7d7460;text-align:center">{{ tapHint }}</div>
+    <button onPointerDown="{{ press }}" style="all:unset;cursor:pointer;width:100%;box-sizing:border-box;text-align:center;background:{{ tapBg }};color:#f7f0dd;padding:22px;border-radius:6px;font-family:'Patrick Hand',cursive;font-size:40px;line-height:1;box-shadow:0 4px 0 rgba(43,39,31,.3)" style-active="transform:scale(.985)">{{ tapLabel }}</button>
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.06em;white-space:nowrap">{{ tapMeta }}</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:62px 0 24px;display:flex;flex-direction:column">
+  <div style="padding:0 24px">
+    <div style="font-size:12px;font-style:italic;color:#8a8069;letter-spacing:.04em">the winner is</div>
+    <div style="font-family:'Patrick Hand',cursive;font-size:50px;line-height:1.24;margin-top:2px">{{ winnerName }}</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">{{ winnerBlurb }}</div>
+    <div style="font-family:'Patrick Hand',cursive;font-size:23px;line-height:1.2;margin-top:6px;color:#57764b">{{ winnerCredit }}</div>
+  </div>
+  <div style="margin:14px 24px 0;height:1px;background:linear-gradient(90deg,#cbbb95,transparent)"></div>
+  <sc-if value="{{ hasSpots }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:14px 24px 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:7px">
+    <span style="font:10px/1.3 ui-monospace,Menlo,monospace;color:#6b6250;letter-spacing:.05em">{{ attribution }}</span>
+    <span style="font:9px/1.3 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.05em">{{ queryLine }}</span>
+  </div>
+  <div style="padding:12px 24px 0;display:flex;flex-direction:column;gap:11px">
+    <sc-for list="{{ spots }}" as="s" hint-placeholder-count="4">
+      <div style="border:1px solid #cbbb95;border-radius:5px;background:rgba(255,255,255,.44);overflow:hidden;display:flex;flex-direction:column">
+        <div style="position:relative;height:96px;background-color:#d8c8a4;background-image:{{ s.photoCss }};background-size:cover;background-position:center">
+          <div style="position:absolute;left:0;bottom:0;padding:3px 7px;font:9px/1.4 ui-monospace,Menlo,monospace;color:#f7f0dd;background:rgba(43,39,31,.78);letter-spacing:.06em;border-radius:0 3px 0 0">PLACES PHOTO</div>
+        </div>
+        <div style="padding:11px 14px 13px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+          <div style="font-family:'Patrick Hand',cursive;font-size:26px;line-height:1.2">{{ s.name }}</div>
+          <div style="font-size:13px;color:#6b6250;white-space:nowrap">{{ s.meta }}</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ s.links }}" as="k" hint-placeholder-count="3">
+            <button onClick="{{ k.open }}" style="all:unset;cursor:pointer;flex:1;text-align:center;padding:9px 0;border:1px solid {{ k.border }};background:{{ k.bg }};color:{{ k.fg }};border-radius:3px;font-size:13.5px">{{ k.label }}</button>
+          </sc-for>
+        </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  </sc-if>
+  <sc-if value="{{ noSpots }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 24px 0;display:flex;flex-direction:column;gap:13px">
+    <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:7px">
+      <span style="font:10px/1.3 ui-monospace,Menlo,monospace;color:#6b6250;letter-spacing:.05em">{{ attribution }}</span>
+      <span style="font:9px/1.3 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.05em">{{ queryLine }} · 0 RESULTS</span>
+    </div>
+    <div style="border:1px dashed #b9a67c;border-radius:6px;padding:22px 18px;text-align:center;display:flex;flex-direction:column;gap:9px;background:rgba(150,87,58,.06)">
+      <div style="font-family:'Patrick Hand',cursive;font-size:30px;line-height:1.2">No restaurants nearby. Run it again!</div>
+      <div style="font-size:13.5px;font-style:italic;color:#6b6250;line-height:1.5">Nothing matching {{ winnerName }} inside your budget and distance. It sits out the next race so something else can win.</div>
+    </div>
+    <button onClick="{{ retryBarred }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:15px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:25px;box-shadow:0 3px 0 rgba(43,39,31,.28)">Run it again without {{ winnerName }}</button>
+    <button onClick="{{ toFilters }}" style="all:unset;cursor:pointer;align-self:center;font-size:13px;font-style:italic;color:#a8781c;border-bottom:1px solid rgba(168,120,28,.4)">Widen the rules instead</button>
+  </div>
+  </sc-if>
+  <div style="flex:1"></div>
+  <div style="padding:18px 24px 0;display:flex;flex-direction:column;gap:9px">
+    <div style="display:flex;gap:9px">
+      <button onClick="{{ again }}" style="all:unset;cursor:pointer;flex:1;text-align:center;background:#2b271f;color:#f7f0dd;padding:15px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:24px;box-shadow:0 3px 0 rgba(43,39,31,.28)">Run it again</button>
+      <button onClick="{{ toHome }}" style="all:unset;cursor:pointer;flex:none;text-align:center;border:1px solid #2b271f;padding:15px 20px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:24px">Done</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAlmanac }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:66px 26px 24px;display:flex;flex-direction:column;gap:18px">
+  <div>
+    <div style="font-family:'Patrick Hand',cursive;font-size:38px;line-height:1.26">The almanac</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">{{ almanacSub }}</div>
+  </div>
+  <sc-if value="{{ hasHistory }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">STANDINGS</div>
+      <sc-for list="{{ standings }}" as="s" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;gap:11px">
+          <div style="width:82px;flex:none;font-family:'Patrick Hand',cursive;font-size:21px">{{ s.name }}</div>
+          <div style="flex:1;height:11px;background:rgba(120,95,50,.12);border-radius:2px;overflow:hidden">
+            <div style="height:100%;width:{{ s.pct }};background:{{ s.tone }};opacity:.8"></div>
+          </div>
+          <div style="width:22px;flex:none;text-align:right;font-size:14px;color:#6b6250">{{ s.wins }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">EVERY RACE</div>
+      <sc-for list="{{ history }}" as="h" hint-placeholder-count="4">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding-bottom:11px;border-bottom:1px dotted rgba(120,95,50,.3)">
+          <div style="width:52px;flex:none;font:9.5px/1.5 ui-monospace,Menlo,monospace;color:#9b8f73;padding-top:4px">{{ h.when }}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Patrick Hand',cursive;font-size:23px;line-height:1.1">{{ h.winner }}</div>
+            <div style="font-size:13px;font-style:italic;color:#7d7460">{{ h.detail }}</div>
+          </div>
+          <div style="flex:none;width:38px;height:30px;background-image:{{ h.imgCss }};background-size:contain;background-position:center;background-repeat:no-repeat"></div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+  <sc-if value="{{ noHistory }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px dashed #cbbb95;border-radius:6px;padding:26px;text-align:center;font-size:14px;font-style:italic;color:#7d7460;line-height:1.6">Nothing pressed in here yet.<br>Run a race and it starts keeping score.</div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:66px 26px 24px;display:flex;flex-direction:column;gap:22px">
+  <div>
+    <div style="font-family:'Patrick Hand',cursive;font-size:38px;line-height:1.26">The potting shed</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">Everything here lives on this phone.</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">YOU</div>
+    <input type="text" value="{{ name }}" onChange="{{ setName }}" placeholder="Bradley" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.42);border:1px solid #cbbb95;border-radius:3px;padding:11px 13px;font-family:'Patrick Hand',cursive;font-size:24px;color:#2b271f;outline:none">
+    <div style="display:flex;gap:10px">
+      <sc-for list="{{ avatars }}" as="a" hint-placeholder-count="6">
+        <button onClick="{{ a.pick }}" style="all:unset;cursor:pointer;flex:1;aspect-ratio:1;border-radius:50%;border:{{ a.ring }};background:{{ a.bg }};display:flex;align-items:center;justify-content:center">
+          <div style="width:30px;height:30px;background-image:{{ a.imgCss }};background-size:contain;background-position:center;background-repeat:no-repeat"></div>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">THE ROOM</div>
+      <div style="font-size:12px;font-style:italic;color:#8a8069">{{ peopleCount }}</div>
+    </div>
+    <sc-if value="{{ hasPeople }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ peopleChips }}" as="p" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #d6c8a4;border-radius:999px;background:rgba(255,255,255,.45)">
+            <span style="width:17px;height:17px;background-image:{{ p.imgCss }};background-size:contain;background-position:center;background-repeat:no-repeat"></span>
+            <span style="font-family:'Patrick Hand',cursive;font-size:20px">{{ p.name }}</span>
+            <button onClick="{{ p.forget }}" style="all:unset;cursor:pointer;font-size:14px;color:#b0a488">×</button>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ roomHasSpace }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onClick="{{ cycleRoomLeaf }}" style="all:unset;cursor:pointer;width:38px;height:38px;flex:none;border-radius:50%;border:1px solid #cbbb95;background-color:rgba(255,255,255,.5);background-image:{{ roomLeafCss }};background-size:19px;background-position:center;background-repeat:no-repeat"></button>
+        <input type="text" value="{{ roomDraft }}" onChange="{{ setRoomDraft }}" placeholder="add a guest" style="flex:1;min-width:0;box-sizing:border-box;background:rgba(255,255,255,.42);border:1px solid #cbbb95;border-radius:3px;padding:9px 12px;font-family:'Patrick Hand',cursive;font-size:22px;color:#2b271f;outline:none">
+        <button onClick="{{ addRoomPerson }}" style="all:unset;cursor:pointer;flex:none;padding:9px 16px;border:1px solid #2b271f;border-radius:3px;font-family:'Patrick Hand',cursive;font-size:21px">Add</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ roomFull }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:12.5px;font-style:italic;color:#8a8069">Five guests is the limit. Remove one to add somebody else.</div>
+    </sc-if>
+    <sc-if value="{{ noPeople }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:13px;font-style:italic;color:#7d7460;line-height:1.5">Nobody saved yet. Add them here, or hand a runner to someone in the paddock and they'll be remembered. Five guests plus you.</div>
+    </sc-if>
+  </div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">CUSTOM FOODS</div>
+      <div style="font-size:12px;font-style:italic;color:#8a8069">{{ foodCount }}</div>
+    </div>
+    <div style="font-size:13px;font-style:italic;color:#6b6250;line-height:1.45">Add anything you eat. It shows up under Who's running.</div>
+    <div style="display:flex;gap:9px">
+      <input type="text" value="{{ newFood }}" onChange="{{ setNewFood }}" placeholder="Shawarma" style="flex:1;min-width:0;box-sizing:border-box;background:rgba(255,255,255,.42);border:1px solid #cbbb95;border-radius:3px;padding:10px 12px;font-family:'Patrick Hand',cursive;font-size:23px;color:#2b271f;outline:none">
+      <button onClick="{{ addFood }}" style="all:unset;cursor:pointer;flex:none;padding:0 18px;display:flex;align-items:center;border:1px solid #2b271f;border-radius:3px;font-family:'Patrick Hand',cursive;font-size:22px">Add</button>
+    </div>
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">CATEGORY</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <sc-for list="{{ shedCats }}" as="c" hint-placeholder-count="12">
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 11px;border:1px {{ c.stroke }} #d6c8a4;border-radius:999px;background:{{ c.bg }}">
+          <span style="width:8px;height:8px;border-radius:50% 0 50% 0;background:{{ c.tone }};transform:rotate(45deg)"></span>
+          <span style="font-size:14px">{{ c.name }}</span>
+          <button onClick="{{ c.remove }}" style="all:unset;cursor:pointer;font-size:14px;color:#b0a488">×</button>
+        </div>
+      </sc-for>
+    </div>
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em;margin-top:3px">FOOD</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <sc-for list="{{ shedFoods }}" as="c" hint-placeholder-count="12">
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 11px;border:1px {{ c.stroke }} #d6c8a4;border-radius:999px;background:{{ c.bg }}">
+          <span style="width:8px;height:8px;border-radius:50% 0 50% 0;background:{{ c.tone }};transform:rotate(45deg)"></span>
+          <span style="font-size:14px">{{ c.name }}</span>
+          <button onClick="{{ c.remove }}" style="all:unset;cursor:pointer;font-size:14px;color:#b0a488">×</button>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ hasShedMine }}" hint-placeholder-val="{{ false }}">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em;margin-top:3px">YOURS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <sc-for list="{{ shedMine }}" as="c" hint-placeholder-count="12">
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 11px;border:1px {{ c.stroke }} #d6c8a4;border-radius:999px;background:{{ c.bg }}">
+          <span style="width:8px;height:8px;border-radius:50% 0 50% 0;background:{{ c.tone }};transform:rotate(45deg)"></span>
+          <span style="font-size:14px">{{ c.name }}</span>
+          <button onClick="{{ c.remove }}" style="all:unset;cursor:pointer;font-size:14px;color:#b0a488">×</button>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+    <sc-if value="{{ hasHidden }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ restoreFoods }}" style="all:unset;cursor:pointer;align-self:flex-start;font-size:13px;font-style:italic;color:#a8781c;border-bottom:1px solid rgba(168,120,28,.4)">{{ restoreLabel }}</button>
+    </sc-if>
+  </div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">TONIGHT</div>
+    <button onClick="{{ toGames }}" style="all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 13px;border:1px solid #cbbb95;border-radius:4px;background:rgba(255,255,255,.4)">
+      <span style="min-width:0"><span style="font-family:'Patrick Hand',cursive;font-size:23px;display:block;line-height:1.22">{{ gameName }}</span><span style="font-size:12px;font-style:italic;color:#7d7460">{{ favNote }}</span></span>
+      <span style="font-size:13px;font-style:italic;color:#a8781c;white-space:nowrap">games shed</span>
+    </button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">PRO</div>
+    <sc-if value="{{ adVisible }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ toPro }}" style="all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:14px;border:1px solid #57764b;border-radius:4px;background:rgba(87,118,75,.1)">
+        <span><span style="font-family:'Patrick Hand',cursive;font-size:24px;display:block;line-height:1.1">Food Brawl Pro</span><span style="font-size:12.5px;font-style:italic;color:#6b6250">pick tonight's game yourself</span></span>
+        <span style="font-family:'Patrick Hand',cursive;font-size:26px;color:#57764b">$1</span>
+      </button>
+    </sc-if>
+    <sc-if value="{{ proVisible }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:14px;border:1px solid #57764b;border-radius:4px;background:rgba(87,118,75,.1);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-family:'Patrick Hand',cursive;font-size:24px">Pro is on</span>
+        <button onClick="{{ dropPro }}" style="all:unset;cursor:pointer;font-size:12.5px;font-style:italic;color:#7d7460">undo (demo)</button>
+      </div>
+    </sc-if>
+  </div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">THIS DEVICE</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;line-height:1.6">{{ storageLine }}</div>
+    <button onClick="{{ wipe }}" style="all:unset;cursor:pointer;align-self:flex-start;font-size:13.5px;font-style:italic;color:#96573a;border-bottom:1px solid rgba(150,87,58,.4)">Clear everything and start over</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isGames }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:66px 22px 24px;display:flex;flex-direction:column;gap:16px">
+  <div>
+    <div style="font-family:'Patrick Hand',cursive;font-size:38px;line-height:1.26">The games shed</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:2px">{{ galleryNote }}</div>
+  </div>
+  <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4">
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">{{ g.title }}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="5">
+          <div style="position:relative;border:1px solid {{ i.border }};border-radius:6px;background:{{ i.bg }};overflow:hidden;opacity:{{ i.opacity }}">
+            <button onClick="{{ i.open }}" style="all:unset;cursor:{{ i.cursor }};display:flex;flex-direction:column;width:100%">
+              <div style="height:72px;width:100%;background-color:{{ i.thumbBg }};background-image:{{ i.thumbCss }};background-size:{{ i.thumbSize }};background-position:{{ i.thumbPos }};background-repeat:no-repeat;border-bottom:1px solid {{ i.border }}"></div>
+              <div style="padding:8px 9px 10px;display:flex;flex-direction:column;gap:2px">
+                <div style="font-family:'Patrick Hand',cursive;font-size:20px;line-height:1.22;color:#2b271f">{{ i.name }}</div>
+                <div style="font-size:11.5px;font-style:italic;color:#7d7460;line-height:1.35">{{ i.desc }}</div>
+                <div style="font:8.5px/1.4 ui-monospace,Menlo,monospace;color:{{ i.tagColor }};letter-spacing:.06em;margin-top:2px">{{ i.tag }}</div>
+              </div>
+            </button>
+            <button onClick="{{ i.star }}" style="all:unset;cursor:{{ i.cursor }};position:absolute;top:5px;right:5px;width:28px;height:28px;border-radius:50%;background:rgba(247,240,221,.9);border:1px solid {{ i.starBorder }};display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;color:{{ i.starColor }}">{{ i.starGlyph }}</button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPicker }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;padding:66px 24px 24px;display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;justify-content:space-between;align-items:baseline">
+    <div>
+      <div style="font-family:'Patrick Hand',cursive;font-size:38px;line-height:1.26">Pick the race</div>
+      <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:2px">Pro picks. No draw, no waiting for midnight.</div>
+    </div>
+    <button onClick="{{ toHome }}" style="all:unset;cursor:pointer;font-size:13px;font-style:italic;color:#a8781c">back</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <sc-for list="{{ pickerRows }}" as="p" hint-placeholder-count="2">
+      <button onClick="{{ p.choose }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid {{ p.border }};background:{{ p.bg }};border-radius:5px;box-shadow:{{ p.shadow }}">
+        <div style="width:64px;height:44px;flex:none;border-radius:4px;border:1px solid #cbbb95;background-color:{{ p.shotBg }};background-image:{{ p.shotCss }};background-size:{{ p.shotSize }};background-position:{{ p.shotPos }};background-repeat:no-repeat"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'Patrick Hand',cursive;font-size:23px;line-height:1.22">{{ p.name }}</div>
+          <div style="font-size:12px;font-style:italic;color:#7d7460">{{ p.dir }}</div>
+        </div>
+        <div style="width:18px;height:18px;flex:none;border-radius:50%;border:1.5px solid {{ p.dotBorder }};background:{{ p.dotBg }}"></div>
+      </button>
+    </sc-for>
+  </div>
+  <button onClick="{{ clearChoice }}" style="all:unset;cursor:pointer;align-self:flex-start;font-size:13px;font-style:italic;color:#a8781c;border-bottom:1px solid rgba(168,120,28,.4)">{{ clearChoiceLabel }}</button>
+  <div style="flex:1"></div>
+  <div style="font-size:12.5px;font-style:italic;color:#8a8069;line-height:1.5">Free accounts get a game drawn each midnight, weighted to whatever they've starred. Pro just picks.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ navVisible }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;padding:8px 14px 34px;background:linear-gradient(180deg,rgba(107,83,64,.06),rgba(107,83,64,.16));border-top:1px solid #cbbb95;display:flex;gap:4px">
+  <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+    <button onClick="{{ t.go }}" style="all:unset;cursor:pointer;flex:1;text-align:center;padding:10px 0 8px;border-radius:5px;background:{{ t.bg }};display:flex;flex-direction:column;align-items:center;gap:5px">
+      <span style="width:11px;height:11px;border-radius:50% 0 50% 0;background:{{ t.dot }};transform:rotate(45deg)"></span>
+      <span style="font-family:'Patrick Hand',cursive;font-size:19px;line-height:1;color:{{ t.fg }}">{{ t.label }}</span>
+    </button>
+  </sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ peekOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(43,39,31,.5);display:flex;align-items:center;justify-content:center;padding:22px;z-index:85">
+  <div style="width:100%;box-sizing:border-box;background:#f7f0dd;border:1px solid #cbbb95;border-radius:8px;box-shadow:0 18px 38px rgba(43,39,31,.3);overflow:hidden;display:flex;flex-direction:column">
+    <div style="position:relative;height:{{ peekH }}px;background-color:{{ peekBg }};background-image:{{ peekBgImg }};background-size:{{ peekBgSize }};background-position:top center;background-repeat:no-repeat">
+      <sc-for list="{{ peekLanes }}" as="p" hint-placeholder-count="3">
+        <div style="position:absolute;left:{{ p.left }};top:{{ p.top }};transform:translate(-50%,-50%);width:46px;height:31px;background-image:{{ p.imgCss }};background-size:contain;background-position:center bottom;background-repeat:no-repeat;filter:drop-shadow(0 2px 2px rgba(43,39,31,.35))"></div>
+      </sc-for>
+      <sc-for list="{{ peekPegs }}" as="g" hint-placeholder-count="0">
+        <div style="position:absolute;left:{{ g.x }}px;top:{{ g.y }}px;width:{{ g.d }}px;height:{{ g.d }}px;transform:translate(-50%,-50%);background-image:{{ g.art }};background-size:contain;background-repeat:no-repeat"></div>
+      </sc-for>
+      <sc-for list="{{ peekBalls }}" as="b" hint-placeholder-count="0">
+        <div style="position:absolute;left:{{ b.x }}px;top:{{ b.y }}px;width:{{ b.d }}px;height:{{ b.d }}px;transform:translate(-50%,-50%);background-image:{{ b.art }};background-size:contain;background-repeat:no-repeat;filter:drop-shadow(0 2px 2px rgba(43,39,31,.4))"></div>
+      </sc-for>
+      <sc-if value="{{ peekIsPlinko }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:0;right:0;top:184px;height:3px;background:repeating-linear-gradient(90deg,#2b271f 0 8px,transparent 8px 16px);opacity:.7"></div>
+      </sc-if>
+      <sc-if value="{{ peekIsFrog }}" hint-placeholder-val="{{ false }}">
+        <sc-for list="{{ peekFrogs }}" as="p" hint-placeholder-count="0">
+          <div style="position:absolute;left:{{ p.left }};top:{{ p.padTop }};transform:translate(-50%,-50%);width:36px;height:20px;background-image:{{ p.padArt }};background-size:contain;background-position:center;background-repeat:no-repeat"></div>
+        </sc-for>
+        <sc-for list="{{ peekFrogs }}" as="p" hint-placeholder-count="0">
+          <div style="position:absolute;left:{{ p.left }};top:{{ p.top }};transform:translate(-50%,-50%);width:{{ p.fw }}px;height:{{ p.fh }}px;background-image:{{ p.art }};background-size:contain;background-position:center bottom;background-repeat:no-repeat;filter:drop-shadow(0 2px 3px rgba(43,39,31,.35))"></div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{ peekIsCorgi }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;top:56px;bottom:0;right:0;width:16px;background-color:rgba(247,240,221,.9);background-image:conic-gradient(#2b271f 25%,transparent 0 50%,#2b271f 0 75%,transparent 0);background-size:16px 16px;opacity:.85;border-left:1px solid #2b271f"></div>
+      </sc-if>
+      <div style="position:absolute;left:0;bottom:0;padding:3px 8px;font:9px/1.4 ui-monospace,Menlo,monospace;color:#f7f0dd;background:rgba(43,39,31,.78);letter-spacing:.06em;border-radius:0 3px 0 0">5-SECOND SAMPLE · LOOPING</div>
+    </div>
+    <div style="padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px">
+      <div>
+        <div style="font-family:'Patrick Hand',cursive;font-size:32px;line-height:1.24">{{ peekName }}</div>
+        <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:1px">{{ peekDesc }}</div>
+      </div>
+      <div style="font-size:14px;color:#5d5544;line-height:1.5;border-left:2px solid #cbbb95;padding-left:11px">{{ peekRules }}</div>
+      <div style="display:flex;gap:9px">
+        <button onClick="{{ peekStar }}" style="all:unset;cursor:pointer;flex:1;text-align:center;padding:13px 0;border:1px solid {{ peekStarBorder }};background:{{ peekStarBg }};color:{{ peekStarFg }};border-radius:4px;font-family:'Patrick Hand',cursive;font-size:22px">{{ peekStarLabel }}</button>
+        <button onClick="{{ closeSheets }}" style="all:unset;cursor:pointer;flex:none;padding:13px 20px;border:1px solid #2b271f;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:22px">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ claimSheet }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(43,39,31,.42);display:flex;align-items:flex-end;z-index:80">
+  <div style="width:100%;box-sizing:border-box;padding:22px 24px 38px;background:#f7f0dd;border-top:1px solid #cbbb95;border-radius:14px 14px 0 0;box-shadow:0 -12px 30px rgba(43,39,31,.2);display:flex;flex-direction:column;gap:14px">
+    <div>
+      <div style="font-family:'Patrick Hand',cursive;font-size:32px;line-height:1.24">Who's on {{ claimFood }}?</div>
+      <div style="font-size:13px;font-style:italic;color:#6b6250;margin-top:1px">Back as many as you like. Two people can share one.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ claimRows }}" as="r" hint-placeholder-count="2">
+        <button onClick="{{ r.toggle }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:11px;padding:9px 11px;border:1px solid {{ r.border }};background:{{ r.bg }};border-radius:5px">
+          <div style="width:28px;height:28px;flex:none;background-image:{{ r.imgCss }};background-size:contain;background-position:center;background-repeat:no-repeat"></div>
+          <div style="flex:1;min-width:0;font-family:'Patrick Hand',cursive;font-size:23px;line-height:1.2">{{ r.name }}</div>
+          <div style="font-size:11.5px;font-style:italic;color:#7d7460;white-space:nowrap">{{ r.also }}</div>
+          <div style="width:20px;height:20px;flex:none;border-radius:4px;border:1.5px solid {{ r.boxBorder }};background:{{ r.boxBg }};display:flex;align-items:center;justify-content:center;font-size:13px;color:#f7f0dd">{{ r.tick }}</div>
+        </button>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:9px">
+      <input type="text" value="{{ draftName }}" onChange="{{ setDraftName }}" placeholder="add someone" style="flex:1;min-width:0;box-sizing:border-box;background:rgba(255,255,255,.42);border:1px solid #cbbb95;border-radius:3px;padding:10px 12px;font-family:'Patrick Hand',cursive;font-size:23px;color:#2b271f;outline:none">
+      <button onClick="{{ addPerson }}" style="all:unset;cursor:pointer;flex:none;padding:0 18px;display:flex;align-items:center;border:1px solid #2b271f;border-radius:3px;font-family:'Patrick Hand',cursive;font-size:22px">Add</button>
+    </div>
+    <button onClick="{{ closeSheets }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:14px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:25px">Done</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ nameSheet }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(43,39,31,.42);display:flex;align-items:center;justify-content:center;padding:30px;z-index:85">
+  <div style="width:100%;box-sizing:border-box;padding:24px;background:#f7f0dd;border:1px solid #cbbb95;border-radius:8px;box-shadow:0 16px 34px rgba(43,39,31,.24);display:flex;flex-direction:column;gap:14px">
+    <div style="font-family:'Patrick Hand',cursive;font-size:32px;line-height:1.1">Shall we call you Bradley?</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;line-height:1.55">You left the name blank. Bradley is the house default, and you can change it any time in the shed.</div>
+    <button onClick="{{ acceptDefaultName }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:14px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:25px;box-shadow:0 3px 0 rgba(43,39,31,.25)">Yes, that's me</button>
+    <button onClick="{{ closeSheets }}" style="all:unset;cursor:pointer;text-align:center;font-size:13.5px;font-style:italic;color:#7d7460">Let me type my own</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ proSheet }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(43,39,31,.42);display:flex;align-items:flex-end;z-index:80">
+  <div style="width:100%;box-sizing:border-box;padding:26px 26px 42px;background:#f7f0dd;border-top:1px solid #cbbb95;border-radius:14px 14px 0 0;box-shadow:0 -12px 30px rgba(43,39,31,.2);display:flex;flex-direction:column;gap:15px">
+    <div style="display:flex;align-items:center;gap:7px;justify-content:center">
+      <div style="width:9px;height:9px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(45deg);opacity:.75"></div>
+      <div style="width:6px;height:6px;background:#a8781c;border-radius:50%;opacity:.55"></div>
+      <div style="width:9px;height:9px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(225deg);opacity:.75"></div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-family:'Patrick Hand',cursive;font-size:40px;line-height:1.26">Food Brawl Pro</div>
+      <div style="font-size:14px;font-style:italic;color:#6b6250;margin-top:5px">One payment. You pick tonight's game.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:#5d5544">
+      <div style="display:flex;gap:10px"><span style="color:#57764b">·</span>Pick tonight's game yourself — no daily draw, no waiting for midnight.</div>
+      <div style="display:flex;gap:10px"><span style="color:#57764b">·</span>Every game unlocked to choose from, any night you like.</div>
+      <div style="display:flex;gap:10px"><span style="color:#57764b">·</span>One payment. No subscription, no account, nothing to cancel.</div>
+    </div>
+    <button onClick="{{ buyPro }}" style="all:unset;cursor:pointer;text-align:center;background:#57764b;color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:27px;box-shadow:0 3px 0 rgba(43,39,31,.25)">Buy for $1</button>
+    <button onClick="{{ closeSheets }}" style="all:unset;cursor:pointer;text-align:center;font-size:13.5px;font-style:italic;color:#7d7460">Maybe later</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ linkSheet }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(43,39,31,.42);display:flex;align-items:center;justify-content:center;padding:30px;z-index:80">
+  <div style="width:100%;box-sizing:border-box;padding:22px;background:#f7f0dd;border:1px solid #cbbb95;border-radius:8px;box-shadow:0 16px 34px rgba(43,39,31,.24);display:flex;flex-direction:column;gap:13px">
+    <div style="font-family:'Patrick Hand',cursive;font-size:30px;line-height:1.26">{{ linkTitle }}</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;line-height:1.55">On a phone this leaves Food Brawl and opens the app. In the demo, here's the URL it fires:</div>
+    <div style="font:10px/1.6 ui-monospace,Menlo,monospace;color:#5d5544;background:rgba(120,95,50,.09);border:1px solid #d6c8a4;border-radius:3px;padding:11px;word-break:break-all">{{ linkUrl }}</div>
+    <div style="font-size:12.5px;font-style:italic;color:#7d7460;line-height:1.5">{{ linkFallback }}</div>
+    <button onClick="{{ closeSheets }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:13px;border-radius:4px;font-family:'Patrick Hand',cursive;font-size:23px">Back to the card</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ savedToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:104px;display:flex;justify-content:center;z-index:70;pointer-events:none">
+  <div style="background:#2b271f;color:#f7f0dd;padding:9px 17px;border-radius:999px;font-size:13.5px;font-style:italic;box-shadow:0 4px 12px rgba(43,39,31,.3)">{{ savedToast }}</div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:820,&quot;height&quot;:940},&quot;raceSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:15,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:10,&quot;max&quot;:20,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;section&quot;:&quot;Race&quot;}}">
+const CU = [
+  {id:'fastfood',name:'Fast Food',kind:'cat',tone:'#b06a2c',silks:'paper and amber'},
+  {id:'mexican',name:'Mexican',kind:'cat',tone:'#a8582f',silks:'chilli and lime'},
+  {id:'italian',name:'Italian',kind:'cat',tone:'#8c4a33',silks:'tomato and basil'},
+  {id:'japanese',name:'Japanese',kind:'cat',tone:'#4f6f6a',silks:'slate and rice'},
+  {id:'asianfusion',name:'Asian Fusion',kind:'cat',tone:'#6b7f4a',silks:'ginger and moss'},
+  {id:'thai',name:'Thai',kind:'cat',tone:'#57764b',silks:'moss and chalk'},
+  {id:'vietnamese',name:'Vietnamese',kind:'cat',tone:'#7a8f5c',silks:'mint and broth'},
+  {id:'indian',name:'Indian',kind:'cat',tone:'#9d7a24',silks:'turmeric gold'},
+  {id:'chinese',name:'Chinese',kind:'cat',tone:'#96573a',silks:'brick and gold'},
+  {id:'healthy',name:'Healthy',kind:'cat',tone:'#6d8a4a',silks:'green and linen'},
+  {id:'desserts',name:'Desserts',kind:'cat',tone:'#a8781c',silks:'honey and cream'},
+  {id:'vegan',name:'Vegan',kind:'cat',tone:'#5f8248',silks:'clover and oat'},
+  {id:'burgers',name:'Burgers',kind:'food',tone:'#96573a',silks:'brick and oat'},
+  {id:'pizza',name:'Pizza',kind:'food',tone:'#a8781c',silks:'honey and cream'},
+  {id:'tacos',name:'Tacos',kind:'food',tone:'#8a6b2f',silks:'ochre stripes'},
+  {id:'ramen',name:'Ramen',kind:'food',tone:'#6b5340',silks:'walnut brown'},
+  {id:'sushi',name:'Sushi',kind:'food',tone:'#4f6f6a',silks:'slate green'},
+  {id:'bbq',name:'BBQ',kind:'food',tone:'#8c4a33',silks:'smoke and rust'},
+  {id:'curry',name:'Curry',kind:'food',tone:'#9d7a24',silks:'saffron and clay'},
+  {id:'friedchicken',name:'Fried Chicken',kind:'food',tone:'#b0803a',silks:'gold and pepper'},
+  {id:'salad',name:'Salad',kind:'food',tone:'#6d8a4a',silks:'leaf and linen'},
+  {id:'boba',name:'Boba',kind:'food',tone:'#7a6350',silks:'milk and pearl'}
+];
+const IMG = {pizza:'art/corgi-4.png',burgers:'art/corgi-3.png',thai:'art/corgi-1.png',tacos:'art/corgi-8.png',ramen:'art/corgi-9.png',sushi:'art/corgi-7.png',bbq:'art/corgi-10.png',vegan:'art/corgi-5.png',curry:'art/corgi-2.png'};
+const CORGI_POOL = ['art/corgi-4.png','art/corgi-3.png','art/corgi-1.png','art/corgi-8.png','art/corgi-9.png','art/corgi-7.png','art/corgi-10.png','art/corgi-5.png','art/corgi-2.png'];
+const artFor = id => IMG[id] || CORGI_POOL[Math.abs(hash(String(id))) % CORGI_POOL.length];
+const BALL_POOL = [1,2,3,4,5,6];
+const artForGame = (id, n, idx) => n === G_WALNUT ? ('art/food_ball_' + BALL_POOL[idx % 6] + '.png') : artFor(id);
+const imgOf = name => { const c = CU.find(x=>x.name===name); return c ? IMG[c.id] : CORGI_POOL[Math.abs(hash(String(name))) % CORGI_POOL.length]; };
+const almanacImg = (name, g) => g === G_FROG ? ('art/frog_sit_' + (1 + Math.abs(hash(String(name))) % 6) + '.png')
+  : g === G_WALNUT ? ('art/food_ball_' + (1 + Math.abs(hash(String(name))) % 6) + '.png')
+  : imgOf(name);
+const SPOTS = {
+  pizza:[['Nonna\u2019s Ember',4.7,1.1],['Fern & Flour',4.5,2.3],['The Stone Slab',4.3,3.6],['Crooked Chimney',4.1,5.2]],
+  burgers:[['The Copper Ladle',4.6,0.9],['Hazel & Hearth',4.4,2.1],['Bramble Grill',4.2,3.8],['Old Mill Diner',4.0,5.5]],
+  thai:[['Lemongrass Cottage',4.7,1.4],['Basil & Bell',4.5,2.6],['River Kitchen',4.3,4.0],['Thistle Table',4.1,5.8]],
+  tacos:[['Marigold Taqueria',4.6,1.2],['Casa Verde',4.4,2.4],['Little Comal',4.2,3.7],['Ember & Lime',4.0,5.1]],
+  ramen:[['Wildwood Noodle Bar',4.6,1.8],['Thistle & Broth',4.4,2.6],['Little Kettle',4.2,3.9],['Ember House',4.1,5.4]],
+  sushi:[['Stillwater Sushi',4.8,1.6],['Pine & Rice',4.5,2.9],['Blue Heron',4.2,4.3],['Quiet Counter',4.0,5.9]],
+  bbq:[['Smokehouse Lane',4.7,2.0],['The Long Pit',4.5,3.1],['Cedar & Ash',4.2,4.5],['Barnwood BBQ',4.0,6.0]],
+  curry:[['Saffron Cottage',4.6,1.3],['Turmeric & Thyme',4.4,2.7],['Clove Kitchen',4.2,4.1],['The Spice Shed',4.0,5.6]],
+  fastfood:[['The Paper Bag',4.3,0.7],['Roadside Window',4.1,1.6],['Quick Hearth',4.0,2.9],['The Tin Counter',3.9,4.4]],
+  mexican:[['Casa Marigold',4.7,1.1],['Sol & Comal',4.5,2.2],['The Clay Pot',4.3,3.5],['Verde Cantina',4.1,5.0]],
+  italian:[['Osteria Fienile',4.8,1.2],['Nonna & Vine',4.6,2.5],['The Olive Shed',4.3,3.8],['Rosso Cottage',4.1,5.3]],
+  japanese:[['Stillwater Izakaya',4.7,1.5],['Pine & Rice',4.5,2.8],['Lantern Counter',4.3,4.2],['Kura House',4.0,5.7]],
+  asianfusion:[['The Ginger Loft',4.6,1.4],['Two Rivers',4.4,2.7],['Ash & Sesame',4.2,4.0],['The Long Table',4.0,5.5]],
+  vietnamese:[['Mint & Broth',4.7,1.3],['Little Saigon Cottage',4.5,2.4],['The Herb Cart',4.3,3.9],['Song Kitchen',4.1,5.2]],
+  indian:[['Saffron Cottage',4.7,1.3],['Turmeric & Thyme',4.5,2.6],['Clove Kitchen',4.2,4.0],['The Spice Shed',4.0,5.6]],
+  chinese:[['The Red Lantern',4.6,1.0],['Bamboo Kettle',4.4,2.3],['Jade Table',4.2,3.6],['Eight Rivers',4.0,5.1]],
+  healthy:[['The Green Larder',4.6,1.1],['Field & Bowl',4.4,2.2],['Wholegrain Cottage',4.2,3.7],['Root Kitchen',4.0,5.0]],
+  desserts:[['The Honey Spoon',4.8,0.8],['Sugar & Thistle',4.6,1.9],['Little Custard',4.3,3.2],['The Cream Shed',4.1,4.7]],
+  vegan:[['Clover & Oat',4.7,1.2],['The Green Hearth',4.5,2.5],['Root & Rind',4.3,3.8],['Fern Kitchen',4.1,5.4]],
+  friedchicken:[['The Gold Skillet',4.7,1.0],['Pepper & Crumb',4.5,2.1],['Hen House Lane',4.2,3.6],['Southern Shed',4.0,5.2]],
+  salad:[['Leaf & Linen',4.5,0.9],['The Crisp Bowl',4.3,2.0],['Garden Counter',4.1,3.4],['Field Greens',4.0,4.8]],
+  boba:[['Pearl & Milk',4.6,0.8],['The Tapioca Room',4.4,1.8],['Little Straw',4.2,3.1],['Cloud Tea',4.0,4.6]]
+};
+const CUSTOM_TONES = ['#7d5ba6','#2f6f6a','#9d4a4a','#5c7a2f','#a8781c','#8c4a33','#4f6f6a','#6b5340'];
+const AV = [
+  {img:'art/ing-tomato.png', name:'Heirloom Tomato'},
+  {img:'art/ing-porcini.png', name:'Porcini Mushroom'},
+  {img:'art/ing-garlic.png', name:'Garlic Bulb'},
+  {img:'art/ing-thyme.png', name:'Thyme Sprigs'},
+  {img:'art/ing-onion.png', name:'Red Onion'},
+  {img:'art/ing-leek.png', name:'Leek Stalk'}
+];
+const MAX_PLAYERS = 6;
+const leafCss = i => 'url("' + AV[((i % AV.length) + AV.length) % AV.length].img + '")';
+const BUD = ['$','$$','$$$','$$$$'];
+const BLURB = ['by half a length','by a whisker','wire to wire','pulling away at the gate','on the nod'];
+const BLURB_FROG = ['last hop to spare','one pad ahead','a clean line across','the longest jump of the night','never looked back'];
+const BLURB_PLINKO = ['first to the line','off the last bumper and gone','a lucky bounce at the end','straight down the middle','clear of the pack'];
+const KEY = 'foodbrawl.v1';
+const GAMES = [
+  {n:1,name:'Corgi Derby',group:'Racing & Track Matches',dir:'Left to Right',built:true,
+   desc:'3 to 6 corgis, one meadow, one race, first to finish wins',
+   rules:'Three to six corgis, one meadow, left to right. Cheer yours on \u2014 the taps are for the room, not the result.'},
+  {n:2,name:'Frog Jump',group:'Racing & Track Matches',dir:'Left to Right',built:true,
+   desc:'3 to 6 frogs leap across lily pads. First to reach the other side wins',
+   rules:'Frogs leap lily pad to lily pad. First across the pond takes the night.'},
+  {n:3,name:'River Race',group:'Racing & Track Matches',dir:'Left to Right',
+   desc:'3 to 6 paper boats racing to the finish line on a river',
+   rules:'Paper boats on a current. The river decides more than the boats do.'},
+  {n:4,name:'Walnut Drop',group:'Physics & Gravity Drops',dir:'Top to Bottom',built:true,
+   desc:'3 to 6 walnuts drop through a random peg board. First one over the finish line takes the night',
+   rules:'Walnuts fall through a fresh peg board every race. First one over the finish line takes the night \u2014 your taps are sparks, nothing more.'},
+  {n:5,name:'Monkey Tree',group:'Physics & Gravity Drops',dir:'Down to Up',
+   desc:'3 to 6 monkeys scramble up a tree; the first to reach the top wins.',
+   rules:'Monkeys scramble up a trunk from the roots. First to the canopy wins.'}
+];
+const GAME_GROUPS = ['Racing & Track Matches','Physics & Gravity Drops'];
+const G_CORGI = 1, G_FROG = 2, G_WALNUT = 4;
+const FROG = {W:374, H:540, REACH:58, JUMP:0.50, ARC:26, MINSEP:28, CR:48, SIDE:0.35, BRIDGE_CAP:10, WMIN:0.1, WMAX:1.0, RAMP_AT:13, RAMP_C:0.6, HARD_STOP:18, WALL_STOP:19, Y0:176, Y1:527, FIN:302, INSET:15};
+// Water envelope of art/frogjump_board.png, sampled from the artwork: [y, xLeft, xRight]
+const POND_BAND = [[176,55,306],[203,51,314],[230,43,314],[257,36,312],[284,33,326],[311,32,328],[338,40,327],[365,39,343],[392,27,346],[419,35,342],[446,27,347],[473,37,345],[500,35,344],[527,37,327],[539,36,333]];
+function bandAt(y){
+  if (y <= POND_BAND[0][0]) return [POND_BAND[0][1], POND_BAND[0][2]];
+  for (let i = 1; i < POND_BAND.length; i++){
+    if (y <= POND_BAND[i][0]){
+      const a = POND_BAND[i-1], b = POND_BAND[i], t = (y - a[0])/(b[0] - a[0]);
+      return [a[1] + (b[1]-a[1])*t, a[2] + (b[2]-a[2])*t];
+    }
+  }
+  const l = POND_BAND[POND_BAND.length-1];
+  return [l[1], l[2]];
+}
+function inWater(x, y){
+  if (y < FROG.Y0 || y > FROG.Y1) return false;
+  const b = bandAt(y);
+  return x >= b[0] + FROG.INSET && x <= b[1] - FROG.INSET;
+}
+function buildPond(){
+  const pads = [];
+  const ok = (x,y) => inWater(x,y) && pads.every(p => (p.x-x)*(p.x-x) + (p.y-y)*(p.y-y) > FROG.MINSEP*FROG.MINSEP);
+  // Six start pads hugging the left waterline, spaced so nameplates never stack.
+  const starts = [], lane = (FROG.Y1 - FROG.Y0 - 30)/6;
+  for (let i = 0; i < 6; i++){
+    const y = FROG.Y0 + 18 + lane*(i + 0.5) + (Math.random()*6 - 3);
+    starts.push({x: bandAt(y)[0] + FROG.INSET + 6 + Math.random()*6, y});
+  }
+  pads.push(...starts);
+  // Jittered grid over the whole water body: pads spread bank to bank instead of
+  // clumping, with a share of cells left empty so there is still open water.
+  const cols = 6, rows = 10, stepY = (FROG.Y1 - FROG.Y0)/rows;
+  for (let r = 0; r < rows; r++){
+    for (let c = 0; c < cols; c++){
+      if (Math.random() < 0.24) continue;
+      for (let t = 0; t < 10; t++){
+        const y = FROG.Y0 + stepY*(r + 0.12 + Math.random()*0.76);
+        const b = bandAt(y), lo = b[0] + FROG.INSET, hi = b[1] - FROG.INSET;
+        const w = Math.max(1, hi - lo)/cols;
+        const x = lo + w*(c + 0.12 + Math.random()*0.76);
+        if (ok(x,y)){ pads.push({x,y}); break; }
+      }
+    }
+  }
+  // Every seat needs somewhere to go: guarantee forward options in reach.
+  for (const p of starts){
+    let fwd = pads.filter(q => { const dx = q.x-p.x, dy = q.y-p.y; return dx > 6 && dx*dx + dy*dy <= FROG.REACH*FROG.REACH; }).length;
+    let guard = 0;
+    while (fwd < 3 && guard++ < 40){
+      const a = (Math.random()-0.5)*1.9, d = FROG.REACH*(0.35 + Math.random()*0.5);
+      const x = p.x + Math.cos(a)*d, y = p.y + Math.sin(a)*d;
+      if (x - p.x > 6 && ok(x,y)){ pads.push({x,y}); fwd++; }
+    }
+  }
+  // Bridge only true dead ends, and only a few, so open water survives.
+  const R = FROG.REACH*0.95;
+  let budget = FROG.BRIDGE_CAP;
+  for (let pass = 0; pass < 2 && budget > 0; pass++){
+    pads.sort((a,b) => a.x - b.x);
+    for (const p of pads){
+      if (budget <= 0) break;
+      if (p.x >= FROG.FIN - FROG.REACH) continue;
+      const fwd = pads.filter(q => { const dx = q.x-p.x, dy = q.y-p.y; return dx > 5 && dx*dx + dy*dy <= R*R; }).length;
+      if (fwd >= 1) continue;
+      for (let t = 0; t < 20; t++){
+        const a = (Math.random()-0.5)*1.2, d = FROG.REACH*(0.55 + Math.random()*0.35);
+        const x = p.x + Math.cos(a)*d, y = p.y + Math.sin(a)*d;
+        if (x - p.x > 5 && ok(x,y)){ pads.push({x,y}); budget--; break; }
+      }
+    }
+  }
+  pads.sort((a,b) => a.x - b.x);
+  return pads.map((p,i) => ({...p, i, v: 1 + (i % 4)}));
+}
+const FROG_ART = (kind,n) => "url('art/frog_" + kind + '_' + n + ".png')";
+const PAD_ART = n => "url('art/lily_pad_" + n + ".png')";
+const POND_CSS = "url('art/frogjump_preview.png')";
+const POND_SIZE = 'cover';
+const POND_THUMB = 'cover';
+const POND_POS = 'center';
+const NAME_MAX = 24;
+const DEFAULT_PICKED = ['pizza','burgers','thai','tacos','ramen'];
+let _cid = 0;
+const nextCustomId = () => 'f' + Date.now().toString(36) + '_' + (++_cid);
+// Saved state is user-writable (and can be from an older build): clamp everything
+// before it reaches setState, so a hand-edited key can't wedge the app.
+function sanitize(raw){
+  const s = (raw && typeof raw === 'object') ? raw : {};
+  const out = {...s};
+  const int = (v, lo, hi, d) => { const n = Math.floor(Number(v)); return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : d; };
+  out.name = typeof s.name === 'string' ? s.name.trim().slice(0, NAME_MAX) : '';
+  out.avatar = int(s.avatar, 0, 999, 0);
+  out.budget = int(s.budget, 1, 4, 2);
+  out.distance = int(s.distance, 1, 25, 6);
+  out.customs = (Array.isArray(s.customs) ? s.customs : [])
+    .filter(c => c && typeof c.name === 'string' && c.name.trim())
+    .slice(0, 20)
+    .map(c => ({id: (typeof c.id === 'string' && c.id) ? c.id : nextCustomId(), name: c.name.trim().slice(0, NAME_MAX)}));
+  out.hiddenFoods = (Array.isArray(s.hiddenFoods) ? s.hiddenFoods : []).filter(x => typeof x === 'string');
+  const valid = new Set([...CU.map(c => c.id), ...out.customs.map(c => c.id)]);
+  const usable = id => valid.has(id) && !out.hiddenFoods.includes(id);
+  let picked = [...new Set((Array.isArray(s.picked) ? s.picked : []).filter(usable))].slice(0, 6);
+  for (const id of DEFAULT_PICKED){ if (picked.length >= 3) break; if (usable(id) && !picked.includes(id)) picked.push(id); }
+  if (picked.length < 3) picked = CU.filter(c => c.kind !== 'mine').slice(0, 5).map(c => c.id);
+  out.picked = picked;
+  out.people = (Array.isArray(s.people) ? s.people : [])
+    .filter(p => p && typeof p.name === 'string' && p.name.trim())
+    .slice(0, 5)
+    .map((p, i) => ({...p, id: (typeof p.id === 'string' && p.id) ? p.id : 'p' + i, name: p.name.trim().slice(0, NAME_MAX)}));
+  const pids = new Set(['me', ...out.people.map(p => p.id)]);
+  const claims = {};
+  Object.keys((s.claims && typeof s.claims === 'object') ? s.claims : {}).forEach(k => {
+    if (!picked.includes(k)) return;
+    const list = [...new Set((Array.isArray(s.claims[k]) ? s.claims[k] : []).filter(p => pids.has(p)))];
+    if (list.length) claims[k] = list;
+  });
+  out.claims = claims;
+  out.history = (Array.isArray(s.history) ? s.history : [])
+    .filter(h => h && typeof h.winner === 'string')
+    .slice(0, 40)
+    .map(h => ({...h, taps: int(h.taps, 0, 1e6, 0), field: int(h.field, 0, 6, 0)}));
+  out.favs = [...new Set((Array.isArray(s.favs) ? s.favs : []).filter(n => GAMES.some(g => g.n === n)))];
+  out.pro = !!s.pro;
+  out.chosen = GAMES.some(g => g.n === s.chosen && g.built) ? s.chosen : null;
+  out.runner = usable(s.runner) ? s.runner : out.picked[0];
+  return out;
+}
+const BUILT = GAMES.filter(g => g.built);
+const PEEK_IMGS = ['art/corgi-4.png','art/corgi-1.png','art/corgi-9.png'];
+const leafFree = i => 'url("' + PEEK_IMGS[i % PEEK_IMGS.length] + '")';
+const PLINK = {W:346, H:520, R:11, PEG:6, BUMP:11, G:200, REST:0.42, BOUNCE:0.9, VY_MAX:32, VX_MAX:80, FINISH:458, ROWS:11, RAMP_AT:9, RAMP_C:2, HARD_STOP:18, WALL_STOP:19, FUNNEL_TO:130, FUNNEL_K:1.9};
+const PEG_ART = ['art/obstacle_peg.png','art/obstacle_peg_2.png','art/obstacle_peg_3.png'];
+const BALL_ART = n => 'art/food_ball_' + n + '.png';
+function buildBoard(){
+  const pegs = [], bumpers = [];
+  const rows = PLINK.ROWS, top = 70, gap = (PLINK.FINISH - 84)/rows;
+  for (let r = 0; r < rows; r++){
+    const y = top + r*gap;
+    const n = 5 + (r % 2);
+    for (let c = 0; c < n; c++){
+      const x = (PLINK.W/(n+1))*(c+1) + (Math.random()*14 - 7);
+      const far = bumpers.every(b => Math.abs(b.x - x) > 54 || Math.abs(b.y - y) > gap*1.5);
+      if (Math.random() < 0.05 && far) { bumpers.push({x, y, r:PLINK.BUMP, art:PEG_ART[1]}); }
+      else { pegs.push({x, y, r:PLINK.PEG, art:PEG_ART[Math.random() < 0.5 ? 0 : 1]}); }
+    }
+  }
+  return {pegs, bumpers};
+}
+const PEEK_P = {W:340, H:200, R:9, PEG:5, G:460, REST:0.45, FINISH:186};
+function peekBoard(){
+  const pegs = [];
+  for (let r = 0; r < 6; r++){
+    const y = 40 + r*26, n = 7 + (r % 2);
+    for (let c = 0; c < n; c++) pegs.push({x:(PEEK_P.W/(n+1))*(c+1) + (Math.random()*10-5), y, r:PEEK_P.PEG, art:PEG_ART[(r+c)%3]});
+  }
+  return pegs;
+}
+function shotFor(n){
+  if (n === G_FROG) return {
+    bg: '#8aacb4',
+    css: POND_CSS,
+    size: POND_SIZE,
+    thumb: POND_THUMB,
+    pos: POND_POS
+  };
+  if (n === G_WALNUT) return {
+    bg: '#cfd6b4',
+    css: 'url("art/food_ball_4.png"), url("art/food_ball_2.png"), url("art/food_ball_5.png"), url("art/obstacle_peg.png"), url("art/obstacle_peg_2.png"), url("art/board_background.png")',
+    size: '27px auto, 24px auto, 22px auto, 14px auto, 19px auto, 132% auto',
+    thumb: '14px auto, 12px auto, 11px auto, 8px auto, 10px auto, 150% auto',
+    pos: '30% 56%, 56% 41%, 73% 64%, 43% 31%, 64% 50%, center bottom'
+  };
+  return {
+    bg: '#a89a6f',
+    css: 'url("art/corgi-4.png"), url("art/corgi-1.png"), url("art/track.png")',
+    size: '62px auto, 54px auto, 100% auto',
+    thumb: '30px auto, 24px auto, 100% auto',
+    pos: '62% 74%, 30% 88%, top center'
+  };
+}
+const hash = s => { let h=2166136261; for(let i=0;i<s.length;i++) h=Math.imul(h^s.charCodeAt(i),16777619); return h>>>0; };
+const dayKey = () => { const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); };
+const drawDaily = favs => {
+  let pool = BUILT.filter(g => favs.includes(g.n));
+  if (!pool.length) pool = BUILT;
+  return pool[hash(dayKey()) % pool.length];
+};
+
+const DEEP = {
+  DoorDash: q => 'doordash://store/search?query=' + q,
+  'Uber Eats': q => 'ubereats://search?q=' + q,
+  Maps: q => 'comgooglemaps://?q=' + q
+};
+const FALLBACK = {
+  DoorDash: 'Falls back to doordash.com/search if the app isn\u2019t installed.',
+  'Uber Eats': 'Falls back to ubereats.com/search if the app isn\u2019t installed.',
+  Maps: 'Falls back to Apple Maps, then maps.google.com.'
+};
+
+class Component extends DCLogic {
+  state = {
+    ready:false, screen:'setup', started:false, peekT:0, peekBalls:[], chosen:null, platform:'ios', gameN:G_CORGI, balls:[], frogs:[], pond:[], board:{pegs:[],bumpers:[]}, sparks:[], name:'', avatar:0, budget:2, distance:6,
+    picked:['pizza','burgers','thai','tacos','ramen'], runner:'thai',
+    people:[], claims:{}, customs:[], hiddenFoods:[], barred:[], newFood:'', history:[], pro:false, favs:[], peek:null,
+    editing:null, draftName:'', draftAvatar:1,
+    prog:{}, taps:0, petals:[], elapsed:0, winner:null,
+    sheet:null, link:null, toast:null
+  };
+
+  componentDidMount(){
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
+    if (saved && saved.name) {
+      if (Array.isArray(saved.history)) {
+        saved.history = saved.history.map(h => {
+          const {spot, ...rest} = h;
+          return spot === undefined ? h : {...rest, found: spot !== 'nothing nearby'};
+        });
+      }
+      saved = sanitize(saved);
+      this.setState({...saved, people: saved.people||[], claims: saved.claims||{}, customs: saved.customs||[], hiddenFoods: saved.hiddenFoods||[], barred:[], newFood:'', favs: saved.favs||[], chosen: saved.chosen||null, peek:null,
+        ready:true, screen:'home', editing:null, prog:{}, petals:[], winner:null,
+        taps:0, elapsed:0, sheet:null, link:null, toast:null});
+    } else {
+      this.setState({ready:true, screen:'setup'});
+    }
+    // Backgrounding stops rAF. Hold the race and rebase the clock on return, so
+    // coming back doesn't trip the wall-clock failsafe and end it instantly.
+    this._vis = () => {
+      if (document.hidden){
+        if (this.state.started && !this.state.winner && !this._paused){
+          this._paused = true;
+          cancelAnimationFrame(this._raf);
+        }
+      } else if (this._paused){
+        this._paused = false;
+        const now = performance.now();
+        this._t0 += now - (this._last || now);
+        this._last = now;
+        const g = this.state.gameN;
+        this._raf = requestAnimationFrame(g === G_WALNUT ? this.tickPlinko : (g === G_FROG ? this.tickFrog : this.tick));
+      }
+    };
+    document.addEventListener('visibilitychange', this._vis);
+  }
+  componentWillUnmount(){ cancelAnimationFrame(this._praf); cancelAnimationFrame(this._raf); clearTimeout(this._to); clearTimeout(this._toast); if (this._vis) document.removeEventListener('visibilitychange', this._vis); }
+
+  save(patch){
+    this.setState(patch, () => {
+      const s = this.state;
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          name:s.name, avatar:s.avatar, budget:s.budget, distance:s.distance,
+          picked:s.picked, people:s.people, claims:s.claims, customs:s.customs, hiddenFoods:s.hiddenFoods,
+          history:s.history, pro:s.pro, favs:s.favs, chosen:s.chosen
+        }));
+      } catch(e){ this.toast('This phone\u2019s storage is full \u2014 that didn\u2019t save'); }
+    });
+  }
+  toast(msg){
+    clearTimeout(this._toast);
+    this.setState({toast:msg});
+    this._toast = setTimeout(()=>this.setState({toast:null}), 1800);
+  }
+  _dur(){ return this.props.raceSeconds ?? 15; }
+
+  pickGame(){
+    const s = this.state;
+    if (s.pro && s.chosen){
+      const g = GAMES.find(x => x.n === s.chosen && x.built);
+      if (g) return g;
+    }
+    return drawDaily(s.favs);
+  }
+
+  begin = () => {
+    const g = this.pickGame().n;
+    cancelAnimationFrame(this._raf);
+    this._pid = 0;
+    const base = {screen:'race', started:false, taps:0, petals:[], sparks:[], elapsed:0, winner:null, prog:{}, sheet:null, link:null, editing:null, gameN:g};
+    if (g === G_WALNUT) {
+      const board = buildBoard();
+      const ids = this.raceField().slice(0, 6);
+      const slot = PLINK.W / (ids.length + 1);
+      this._b = ids.map((id, i) => ({
+        id, art: (i % 6) + 1,
+        x: slot*(i+1) + (Math.random()*10 - 5), y: 26 + Math.random()*8,
+        vx: Math.random()*40 - 20, vy: 0,
+        lastY: 0, still: 0, rot: Math.random()*360, spin: (Math.random() < 0.5 ? -1 : 1)*(30 + Math.random()*50)
+      }));
+      this._board = board;
+      this.setState({...base, board, balls: this._b.map(b => ({...b}))});
+    } else if (g === G_FROG) {
+      const pond = buildPond();
+      const ids = this.raceField().slice(0, 6);
+      this._pond = pond;
+      this._occ = new Set();
+      this._f = ids.map((id, k) => {
+        const pad = pond[k];
+        this._occ.add(pad.i);
+        return {id, pad, x:pad.x, y:pad.y, hop:0, jt:-1, from:null, to:null, done:false,
+                wait: FROG.WMIN + Math.random()*(FROG.WMAX - FROG.WMIN)};
+      });
+      const prog = {}; this._f.forEach(f => { prog[f.id] = f.x/FROG.W; });
+      this.setState({...base, prog, balls: [], pond, frogs: this._f.map(f => ({...f}))});
+    } else {
+      const dur = this._dur(), runners = {};
+      this.raceField().forEach(id => {
+        runners[id] = {p:0, dur:dur*(0.86+Math.random()*0.28), ph:Math.random()*6.3, ph2:Math.random()*6.3};
+      });
+      this._r = runners;
+      this.setState({...base, balls: []});
+    }
+  };
+
+  launch = () => {
+    if (this.state.started) return;
+    this._t0 = performance.now(); this._last = performance.now(); this._sim = 0;
+    this.setState({started:true});
+    this._raf = requestAnimationFrame(this.state.gameN === G_WALNUT ? this.tickPlinko : (this.state.gameN === G_FROG ? this.tickFrog : this.tick));
+  };
+
+  press = () => { if (this.state.started) this.tap(); else this.launch(); };
+
+  tick = (now) => {
+    if (this.state.gameN === G_WALNUT) return this.tickPlinko(now);
+    if (this.state.gameN === G_FROG) return this.tickFrog(now);
+    const dt = Math.min(0.05, (now - (this._last||now))/1000); this._last = now;
+    const el = (now - this._t0)/1000;
+    let done = null; const prog = {};
+    Object.keys(this._r).forEach(id => {
+      const r = this._r[id];
+      const base = el / r.dur;
+      const wob = 0.055*Math.sin(el*1.9 + r.ph) + 0.032*Math.sin(el*4.3 + r.ph2);
+      r.p = Math.max(0, Math.min(1, base + wob*(1-Math.min(1,base))));
+      prog[id] = r.p;
+      if (r.p >= 1 && !done) done = id;
+    });
+    if (!done && el >= this._dur() + 5){
+      const ids = Object.keys(this._r).sort((a,b) => this._r[b].p - this._r[a].p);
+      done = ids[0] || this.raceField()[0] || this.state.picked[0] || CU[0].id;
+    }
+    const petals = this.state.petals
+      .map(p => ({...p, life:p.life - dt, x:p.x + p.vx*dt, y:p.y + p.vy*dt, vy:p.vy + 60*dt, r:p.r + p.spin*dt}))
+      .filter(p => p.life > 0)
+      .map(p => ({...p, o:Math.max(0, p.life/0.75).toFixed(2)}));
+    if (done) {
+      cancelAnimationFrame(this._raf);
+      this.setState({prog, petals, elapsed:el, winner:done});
+      this._to = setTimeout(() => this.record(done), 1100);
+      return;
+    }
+    this.setState({prog, petals, elapsed:el});
+    this._raf = requestAnimationFrame(this.tick);
+  };
+
+  tickFrog = (now) => {
+    const raw = Math.min(0.034, (now - (this._last||now))/1000); this._last = now;
+    this._sim = (this._sim || 0) + raw;
+    const el = this._sim, wall = (now - this._t0)/1000;
+    const clock = Math.max(el, wall);
+    const ramp = clock > FROG.RAMP_AT ? 1 + (clock - FROG.RAMP_AT)*FROG.RAMP_C : 1;
+    const pond = this._pond, occ = this._occ;
+    let done = null;
+    const prog = {};
+    for (const f of this._f){
+      if (f.done){ prog[f.id] = 1; if (!done) done = f.id; continue; }
+      if (f.jt >= 0){
+        f.jt += raw/(FROG.JUMP/ramp);
+        const t = Math.min(1, f.jt);
+        f.x = f.from.x + (f.to.x - f.from.x)*t;
+        f.y = f.from.y + (f.to.y - f.from.y)*t;
+        f.hop = Math.sin(t*Math.PI)*FROG.ARC;
+        if (f.jt >= 1){
+          f.hop = 0; f.jt = -1;
+          if (f.to.bank){ f.done = true; occ.delete(f.from.i); if (!done) done = f.id; }
+          else {
+            occ.delete(f.from.i); occ.add(f.to.i);
+            f.pad = f.to; f.x = f.to.x; f.y = f.to.y;
+            f.wait = (FROG.WMIN + Math.random()*(FROG.WMAX - FROG.WMIN))/ramp;
+          }
+        }
+      } else {
+        f.wait -= raw;
+        if (f.wait <= 0){
+          const reach = FROG.REACH*ramp;
+          if (f.pad.x >= FROG.FIN - reach){
+            f.from = f.pad; f.to = {x: FROG.FIN + 26, y: f.pad.y, bank: true}; f.jt = 0;
+          } else {
+            let cands = [];
+            for (let pass = 0; pass < 8; pass++){
+              const stretch = reach*(1 + pass*0.4);
+              cands = pond.filter(p => {
+                if (occ.has(p.i)) return false;
+                const dx = p.x - f.pad.x, dy = p.y - f.pad.y;
+                if (dx*dx + dy*dy > stretch*stretch) return false;
+                if (dx > 5) return true;
+                return Math.random() < FROG.SIDE && Math.abs(dx) < stretch*0.5;
+              });
+              if (cands.length) break;
+            }
+            if (cands.length){
+              f.from = f.pad; f.to = cands[Math.floor(Math.random()*cands.length)]; f.jt = 0;
+            } else { f.wait = 0.1; }
+          }
+        }
+      }
+      prog[f.id] = Math.min(1, f.x/FROG.W);
+    }
+    const petals = this.state.petals
+      .map(p => ({...p, life:p.life - raw, x:p.x + p.vx*raw, y:p.y + p.vy*raw, vy:p.vy + 60*raw, r:p.r + p.spin*raw}))
+      .filter(p => p.life > 0)
+      .map(p => ({...p, o:Math.max(0, p.life/0.75).toFixed(2)}));
+    if (!done && (el >= FROG.HARD_STOP || wall >= FROG.WALL_STOP)){
+      done = this._f.slice().sort((a,b) => b.x - a.x)[0].id;
+    }
+    const frogs = this._f.map(f => ({...f}));
+    if (done){
+      cancelAnimationFrame(this._raf);
+      this.setState({frogs, prog, petals, elapsed:el, winner:done});
+      this._to = setTimeout(() => this.record(done), 1000);
+      return;
+    }
+    this.setState({frogs, prog, petals, elapsed:el});
+    this._raf = requestAnimationFrame(this.tickFrog);
+  };
+
+  tickPlinko = (now) => {
+    const raw = Math.min(0.034, (now - (this._last||now))/1000); this._last = now;
+    this._sim = (this._sim || 0) + raw;
+    const el = this._sim;
+    const ramp = el > PLINK.RAMP_AT ? 1 + Math.pow(el - PLINK.RAMP_AT, 2)*PLINK.RAMP_C : 1;
+    const g = PLINK.G * ramp;
+    const vyMax = PLINK.VY_MAX * ramp;
+    const wall = (now - this._t0)/1000;
+    const closing = Math.max(el, wall) > PLINK.HARD_STOP - 2;
+    const obs = this._board.pegs.concat(this._board.bumpers);
+    let done = null;
+    for (let step = 0; step < 2; step++){
+      const dt = raw/2;
+      for (const b of this._b){
+        b.vy += g*dt;
+        b.vx *= 0.99;
+        if (b.y < PLINK.FUNNEL_TO) b.vx += (PLINK.W/2 - b.x)*PLINK.FUNNEL_K*dt;
+        if (b.vy > vyMax) b.vy = vyMax;
+        if (b.vx > PLINK.VX_MAX) b.vx = PLINK.VX_MAX;
+        if (b.vx < -PLINK.VX_MAX) b.vx = -PLINK.VX_MAX;
+        b.x += b.vx*dt; b.y += b.vy*dt;
+        b.rot += (b.spin + b.vx*1.4)*dt;
+        if (b.x < PLINK.R){ b.x = PLINK.R; b.vx = Math.abs(b.vx)*0.55 + 6; b.spin = -b.spin; }
+        if (b.x > PLINK.W - PLINK.R){ b.x = PLINK.W - PLINK.R; b.vx = -Math.abs(b.vx)*0.55 - 6; b.spin = -b.spin; }
+        for (const o of obs){
+          const dx = b.x - o.x, dy = b.y - o.y;
+          const min = PLINK.R + o.r;
+          const d2 = dx*dx + dy*dy;
+          if (d2 >= min*min || d2 === 0) continue;
+          const d = Math.sqrt(d2), nx = dx/d, ny = dy/d;
+          b.x = o.x + nx*min; b.y = o.y + ny*min;
+          const vn = b.vx*nx + b.vy*ny;
+          const bounce = o.r > PLINK.PEG ? PLINK.BOUNCE : PLINK.REST;
+          b.vx -= (1 + bounce)*vn*nx; b.vy -= (1 + bounce)*vn*ny;
+          b.vx += (Math.random() - 0.5)*44;
+          b.spin += (Math.random() - 0.5)*220;
+          if (b.spin > 320) b.spin = 320;
+          if (b.spin < -320) b.spin = -320;
+        }
+        if (closing){ b.vy += 700*dt; b.vx *= 0.9; }
+        if (b.y >= PLINK.FINISH && !done) done = b.id;
+      }
+    }
+    for (const b of this._b){
+      if (Math.abs(b.y - b.lastY) < 1.2) {
+        b.still += raw;
+        if (b.still > 0.4){
+          b.vx += (Math.random() < 0.5 ? -1 : 1)*(70 + Math.random()*50);
+          b.vy += 60; b.still = 0;
+        }
+      } else { b.still = 0; }
+      b.lastY = b.y;
+    }
+    const sparks = this.state.sparks
+      .map(p => ({...p, life:p.life - raw, x:p.x + p.vx*raw, y:p.y + p.vy*raw, vy:p.vy + 90*raw, rot:p.rot + p.spin*raw}))
+      .filter(p => p.life > 0)
+      .map(p => ({...p, o:Math.max(0, p.life/0.5).toFixed(2)}));
+    if (!done && (el >= PLINK.HARD_STOP || wall >= PLINK.WALL_STOP)){
+      done = this._b.slice().sort((a,b) => b.y - a.y)[0].id;
+    }
+    const balls = this._b.map(b => ({...b}));
+    if (done){
+      cancelAnimationFrame(this._raf);
+      this.setState({balls, sparks, elapsed:el, winner:done});
+      this._to = setTimeout(() => this.record(done), 1000);
+      return;
+    }
+    this.setState({balls, sparks, elapsed:el});
+    this._raf = requestAnimationFrame(this.tickPlinko);
+  };
+
+  record(id){
+    const c = this.allFoods().find(x=>x.id===id) || {name:'Dinner'};
+    // Google Places terms allow storing place_id indefinitely, but not names,
+    // ratings or addresses — so the almanac keeps the food and the date only.
+    const entry = {
+      t: Date.now(), winner:c.name, found: this.spotsFor(id).length > 0,
+      taps:this.state.taps, field:this.state.picked.length, g:this.state.gameN
+    };
+    this.save({screen:'result', history:[entry, ...this.state.history].slice(0,40)});
+  }
+
+  tap = () => {
+    if (this.state.winner) return;
+    if (this.state.gameN === G_WALNUT){
+      const own = this.myFoods();
+      const hits = (this._b || []).filter(b => own.includes(b.id));
+      if (!hits.length) return;
+      const add = hits.slice(0,3).map(mine => ({
+        key:'s'+(this._pid++), x:mine.x + (Math.random()*20 - 10), y:mine.y + (Math.random()*20 - 10),
+        vx:(Math.random()*120 - 60), vy:-(20 + Math.random()*90), spin:Math.random()*520 - 260,
+        rot:Math.random()*360, s:16 + Math.random()*10, life:0.5, o:1
+      }));
+      this.setState(s => ({taps:s.taps+1, sparks:[...s.sparks, ...add].slice(-30)}));
+      return;
+    }
+    const id = this.myRunner();
+    const field = this.raceField();
+    let x, y;
+    if (this.state.gameN === G_FROG){
+      const f = (this._f || []).find(z => z.id === id);
+      if (!f) return;
+      x = f.x; y = f.y - f.hop;
+    } else {
+      const r = this._r && this._r[id];
+      if (!r) return;
+      y = 64 + Math.max(0, field.indexOf(id))*66 + 34;
+      x = 26 + r.p*310;
+    }
+    const add = [0,1,2].map(i => ({
+      key:'p'+(this._pid++), x:x+(Math.random()*18-9), y:y+(Math.random()*10-5),
+      vx:(Math.random()*70-35), vy:-(30+Math.random()*70), spin:Math.random()*420-210,
+      r:Math.random()*360, s:5+Math.random()*4, life:0.75, o:1,
+      c: i===1 ? '#a8781c' : '#57764b'
+    }));
+    this.setState(s => ({taps:s.taps+1, petals:[...s.petals, ...add].slice(-42)}));
+  };
+
+  openPeek = n => {
+    const g = GAMES.find(x => x.n === n);
+    if (!g || !g.built) return;
+    this._p0 = performance.now();
+    this._plast = this._p0;
+    if (n === G_WALNUT) { this._ppegs = peekBoard(); this.resetPeekBalls(); }
+    else { this._plane = [0,1,2].map(i => ({ dur: 4.2 + i*0.55, ph: i*2.1, img: leafFree(i) })); }
+    this.setState({peek:n, peekT:0, peekBalls:[]});
+    cancelAnimationFrame(this._praf);
+    this._praf = requestAnimationFrame(this.ptick);
+  };
+
+  resetPeekBalls(){
+    const slot = PEEK_P.W / 4;
+    this._pb = [0,1,2].map(i => ({
+      art: i*2 + 1, x: slot*(i+1) + (Math.random()*12-6), y: 18,
+      vx: Math.random()*36 - 18, vy: 0
+    }));
+  }
+
+  ptick = now => {
+    if (!this.state.peek) return;
+    const t = ((now - this._p0)/1000) % 5;
+    if (this.state.peek !== G_WALNUT){
+      this.setState({peekT: t});
+      this._praf = requestAnimationFrame(this.ptick);
+      return;
+    }
+    const dt = Math.min(0.032, (now - this._plast)/1000); this._plast = now;
+    if (t < (this.state.peekT || 0)) this.resetPeekBalls();
+    for (const b of this._pb){
+      b.vy += PEEK_P.G*dt; b.x += b.vx*dt; b.y += b.vy*dt;
+      if (b.x < PEEK_P.R){ b.x = PEEK_P.R; b.vx = Math.abs(b.vx)*0.55 + 8; }
+      if (b.x > PEEK_P.W - PEEK_P.R){ b.x = PEEK_P.W - PEEK_P.R; b.vx = -Math.abs(b.vx)*0.55 - 8; }
+      for (const o of this._ppegs){
+        const dx = b.x - o.x, dy = b.y - o.y, min = PEEK_P.R + o.r, d2 = dx*dx + dy*dy;
+        if (d2 >= min*min || d2 === 0) continue;
+        const d = Math.sqrt(d2), nx = dx/d, ny = dy/d;
+        b.x = o.x + nx*min; b.y = o.y + ny*min;
+        const vn = b.vx*nx + b.vy*ny;
+        b.vx -= (1 + PEEK_P.REST)*vn*nx; b.vy -= (1 + PEEK_P.REST)*vn*ny;
+        b.vx += (Math.random() - 0.5)*60;
+      }
+      if (b.y > PEEK_P.H - PEEK_P.R - 2){ b.y = PEEK_P.H - PEEK_P.R - 2; b.vy = 0; }
+      if (t > 4.2 && b.y < PEEK_P.FINISH*0.55) b.vy += PEEK_P.G*dt*3;
+    }
+    this.setState({peekT: t, peekBalls: this._pb.map(b => ({...b}))});
+    this._praf = requestAnimationFrame(this.ptick);
+  };
+
+  closePeek = () => { cancelAnimationFrame(this._praf); this.setState({peek:null}); };
+
+  toggleFav = n => {
+    const g = GAMES.find(x => x.n === n);
+    if (!g || !g.built) return;
+    const favs = this.state.favs.includes(n)
+      ? this.state.favs.filter(x => x !== n)
+      : [...this.state.favs, n];
+    this.save({favs});
+    this.toast(favs.includes(n) ? g.name + ' starred' : g.name + ' unstarred');
+  };
+
+  ago(t){
+    const d = Math.floor((Date.now()-t)/86400000);
+    if (d <= 0) return 'today';
+    if (d === 1) return 'yesterday';
+    if (d < 7) return d + ' days';
+    return Math.floor(d/7) + ' wks';
+  }
+
+  allFoods(){
+    const s = this.state;
+    const hidden = s.hiddenFoods || [];
+    const base = CU.filter(c => !hidden.includes(c.id));
+    const customs = (s.customs || []).map((c,i) => ({
+      id:c.id, name:c.name, kind:'mine', tone:CUSTOM_TONES[i % CUSTOM_TONES.length], silks:'your own', custom:true
+    }));
+    return base.concat(customs);
+  }
+
+  foodById(id){
+    const all = this.allFoods();
+    return all.find(c => c.id === id) || all[0] || CU[0];
+  }
+
+  spotsFor(id){
+    if (SPOTS[id]) return SPOTS[id];
+    const c = (this.state.customs || []).find(x => x.id === id);
+    if (!c) return [];
+    const nm = c.name.trim();
+    let h = 2166136261;
+    for (let i = 0; i < nm.length; i++) h = Math.imul(h ^ nm.charCodeAt(i), 16777619) >>> 0;
+    const rnd = n => { let a = (h + n*2654435761) >>> 0; a = Math.imul(a ^ (a >>> 15), a | 1); return ((a ^ (a >>> 14)) >>> 0) / 4294967296; };
+    if (rnd(0) < 0.1) return [];
+    const PAT = [n => 'The ' + n + ' House', n => 'Little ' + n, n => n + ' & Co.', n => 'The Copper ' + n, n => 'Hearth & ' + n, n => n + ' Cottage'];
+    const count = 3 + Math.floor(rnd(1)*2);
+    const reach = Math.min(5.8, Math.max(1.2, (this.state.distance || 6) * 0.92));
+    const used = [], out = [];
+    for (let i = 0; i < count; i++){
+      let k = Math.floor(rnd(10+i) * PAT.length);
+      while (used.includes(k)) k = (k + 1) % PAT.length;
+      used.push(k);
+      out.push([PAT[k](nm), 4.0 + rnd(20+i)*0.8, 0.6 + (reach - 0.6) * ((i + rnd(30+i)*0.6) / count)]);
+    }
+    return out;
+  }
+
+  raceField(){
+    const s = this.state;
+    const barred = s.barred || [];
+    const open = s.picked.filter(id => !barred.includes(id));
+    return (open.length >= 2 ? open : s.picked).slice(0, 6);
+  }
+
+  myFoods(){
+    const c = this.state.claims || {};
+    return this.raceField().filter(id => (c[id] || []).includes('me'));
+  }
+
+  myRunner(){ return this.myFoods()[0] || this.raceField()[0]; }
+
+  renderVals(){
+    const s = this.state;
+    const ALL = this.allFoods();
+    const byId = id => ALL.find(c=>c.id===id) || ALL[0] || CU[0];
+    const showAd = !s.pro;
+    const mine = this.myFoods();
+    const win = byId(s.winner || mine[0] || s.picked[0]);
+    const personOf = pid => pid === 'me' ? {id:'me', name:(s.name || 'You'), avatar:s.avatar} : (s.people.find(p => p.id === pid) || null);
+    const claimsOf = id => ((s.claims || {})[id] || []).map(personOf).filter(Boolean);
+    const chipsFor = kind => ALL.filter(c => c.kind === kind).map(c => {
+      const on = s.picked.includes(c.id);
+      return {
+        name:c.name, dot: on ? '#f7f0dd' : c.tone,
+        bg: on ? '#2b271f' : 'rgba(255,255,255,.4)',
+        fg: on ? '#f7f0dd' : '#2b271f',
+        border: on ? '#2b271f' : '#cbbb95',
+        toggle: () => {
+          const has = s.picked.includes(c.id);
+          if (has && s.picked.length <= 3) return;
+          const picked = has ? s.picked.filter(x=>x!==c.id) : (s.picked.length>=6 ? s.picked : [...s.picked, c.id]);
+          const claims = {};
+          picked.forEach(id => { if ((s.claims||{})[id]) claims[id] = s.claims[id]; });
+          this.save({picked, claims});
+        }
+      };
+    });
+    const shedFor = kind => ALL.filter(c => c.kind === kind).map(c => ({
+      name: c.name, tone: c.tone,
+      bg: c.custom ? 'rgba(87,118,75,.12)' : 'rgba(255,255,255,.45)',
+      stroke: c.custom ? 'solid' : 'dashed',
+      remove: () => {
+        if (ALL.length <= 3) { this.toast('Keep at least three'); return; }
+        const picked = s.picked.filter(x => x !== c.id);
+        const claims = {}; Object.keys(s.claims||{}).forEach(k => { if (k !== c.id) claims[k] = s.claims[k]; });
+        if (c.custom) this.save({customs:(s.customs||[]).filter(x => x.id !== c.id), picked, claims});
+        else this.save({hiddenFoods:[...(s.hiddenFoods||[]), c.id], picked, claims});
+      }
+    }));
+    const winSpots = this.spotsFor(win.id);
+    const noSpots = !!s.winner && winSpots.length === 0;
+    const spots = winSpots.slice(0,4).map(([n,rt,d]) => ({
+      name:n, meta: rt.toFixed(1) + ' · ' + BUD[s.budget-1] + ' · ' + d.toFixed(1) + ' mi',
+      photoCss: 'none',
+      links: ['DoorDash','Uber Eats','Maps'].map((label,i) => ({
+        label,
+        bg: i===0 ? '#2b271f' : 'transparent',
+        fg: i===0 ? '#f7f0dd' : '#2b271f',
+        border: '#2b271f',
+        open: () => this.setState({link:{app:label, name:n, url:DEEP[label](encodeURIComponent(n)), fb:FALLBACK[label]}})
+      }))
+    }));
+    const mm = Math.floor(s.elapsed/60), ss = Math.floor(s.elapsed%60);
+    const leader = s.picked.slice().sort((a,b)=>(s.prog[b]||0)-(s.prog[a]||0))[0];
+    const wins = {};
+    s.history.forEach(h => { wins[h.winner] = (wins[h.winner]||0)+1; });
+    const top = Math.max(1, ...Object.values(wins));
+    const standings = Object.keys(wins).sort((a,b)=>wins[b]-wins[a]).slice(0,5).map(n => {
+      const c = CU.find(x=>x.name===n) || CU[0];
+      return {name:n, wins:wins[n], pct:Math.round(wins[n]/top*100)+'%', tone:c.tone};
+    });
+    const tab = k => ({
+      label: {home:'Brawl', games:'Games', almanac:'Almanac', settings:'Shed'}[k],
+      bg: s.screen===k ? 'rgba(255,255,255,.55)' : 'transparent',
+      fg: s.screen===k ? '#2b271f' : '#7d7460',
+      dot: s.screen===k ? '#a8781c' : '#b9a67c',
+      go: () => this.setState({screen:k, sheet:null, link:null, editing:null, peek:null})
+    });
+    const daily = this.pickGame();
+    const plinkoLead = (s.balls || []).slice().sort((a,b) => b.y - a.y)[0];
+    const plinkoLeader = plinkoLead ? byId(plinkoLead.id).name : '';
+    const peekGame = s.peek ? GAMES.find(g => g.n === s.peek) : null;
+    const peekFav = s.peek ? s.favs.includes(s.peek) : false;
+    const claimedCount = s.picked.filter(id => claimsOf(id).length).length;
+    const openRunners = s.picked.length - claimedCount;
+
+    return {
+      isSetup: s.screen==='setup', isHome: s.screen==='home', isFilters: s.screen==='filters',
+      isPaddock: s.screen==='paddock', isRace: s.screen==='race', isResult: s.screen==='result',
+      isAlmanac: s.screen==='almanac', isSettings: s.screen==='settings', isGames: s.screen==='games',
+      deviceComp: s.platform === 'android' ? 'AndroidDevice' : 'IOSDevice',
+      platformOpts: [['ios','Apple'],['android','Android']].map(([k,label]) => ({
+        label,
+        bg: s.platform === k ? '#2b271f' : 'rgba(255,255,255,.4)',
+        fg: s.platform === k ? '#f7f0dd' : '#2b271f',
+        border: s.platform === k ? '#2b271f' : '#bdae8c',
+        pick: () => this.setState({platform:k})
+      })),
+      planOpts: [[false,'Free'],[true,'Pro']].map(([v,label]) => ({
+        label,
+        bg: s.pro === v ? (v ? '#57764b' : '#2b271f') : 'rgba(255,255,255,.4)',
+        fg: s.pro === v ? '#f7f0dd' : '#2b271f',
+        border: s.pro === v ? (v ? '#57764b' : '#2b271f') : '#bdae8c',
+        pick: () => this.save({pro:v, chosen: v ? s.chosen : null, sheet:null})
+      })),
+      planNote: s.pro
+        ? 'Pro: Tonight\u2019s Race has a working Change Game button.'
+        : 'Free: the game is drawn for you each midnight. No ads either way.',
+      isPicker: s.screen==='picker',
+      navVisible: ['home','games','almanac','settings'].includes(s.screen),
+      tabs: ['home','games','almanac','settings'].map(tab),
+
+      name: s.name,
+      setName: e => this.save({name:e.target.value}),
+      avatars: AV.map((ing,i) => ({
+        imgCss: leafCss(i), name: ing.name,
+        bg: i===s.avatar ? 'rgba(255,255,255,.72)' : 'rgba(255,255,255,.34)',
+        ring: i===s.avatar ? '2px solid #2b271f' : '1px solid #cbbb95',
+        shadow: i===s.avatar ? '0 3px 0 rgba(43,39,31,.22)' : 'none',
+        pick: () => this.save({avatar:i})
+      })),
+      displayName: s.name || 'friend',
+      avatarCss: leafCss(s.avatar),
+      greeting: s.history.length ? 'welcome back' : 'good evening',
+      raceCount: s.history.length,
+      finishSetup: () => { if (!s.name.trim()) { this.setState({sheet:'name'}); return; } this.save({screen:'home', name: s.name.trim()}); },
+      nameSheet: s.sheet === 'name',
+      acceptDefaultName: () => this.save({screen:'home', name:'Bradley', sheet:null}),
+
+      gameName: daily.name, gameDesc: daily.desc,
+      runLabel: 'Run ' + daily.name,
+      gameDir: daily.dir,
+      shotBg: shotFor(daily.n).bg,
+      shotCss: shotFor(daily.n).css,
+      shotSize: shotFor(daily.n).size,
+      shotPos: shotFor(daily.n).pos,
+      pickLabel: 'Change Game',
+      pickBg: s.pro ? 'rgba(247,240,221,.92)' : '#57764b',
+      pickFg: s.pro ? '#2b271f' : '#f7f0dd',
+      pickBorder: s.pro ? '#2b271f' : '#57764b',
+      changeGame: () => this.setState(s.pro ? {screen:'picker'} : {sheet:'pro'}),
+      pickerRows: BUILT.map(g => {
+        const on = s.chosen === g.n, sh = shotFor(g.n);
+        return {
+          name: g.name, dir: g.dir,
+          shotBg: shotFor(g.n).bg,
+          shotCss: sh.css, shotSize: sh.thumb, shotPos: sh.pos,
+          bg: on ? 'rgba(255,255,255,.66)' : 'rgba(255,255,255,.34)',
+          border: on ? '#2b271f' : '#cbbb95',
+          shadow: on ? '0 3px 0 rgba(43,39,31,.2)' : 'none',
+          dotBorder: on ? '#2b271f' : '#b9a67c',
+          dotBg: on ? '#a8781c' : 'transparent',
+          choose: () => { this.save({chosen:g.n, screen:'home'}); this.toast(g.name + ' it is'); }
+        };
+      }),
+      clearChoiceLabel: s.chosen ? 'Go back to the daily draw' : 'Currently using the daily draw',
+      clearChoice: () => { if (s.chosen) { this.save({chosen:null}); this.toast('Back to the daily draw'); } },
+      dailyNote: (s.pro && s.chosen) ? 'your pick' : (s.favs.length ? 'drawn from your ' + s.favs.length + ' starred' : 'drawn from all games'),
+      raceLenLabel: (daily.n === G_WALNUT || daily.n === G_FROG) ? 'under 20 seconds' : 'about ' + this._dur() + ' seconds',
+      fieldPreview: s.picked.map(id => ({name: byId(id).name, tone: byId(id).tone})),
+      filterSummary: BUD[s.budget-1] + ' · within ' + s.distance + (s.distance===1?' mile':' miles') + ' · ' + s.picked.length + ' runners',
+      toFilters: () => this.setState({screen:'filters'}),
+      toPaddock: () => this.setState({screen:'paddock'}),
+      toHome: () => this.setState({screen:'home', sheet:null, link:null, editing:null}),
+      toAlmanac: () => this.setState({screen:'almanac'}),
+      toSettings: () => this.setState({screen:'settings'}),
+      toGames: () => this.setState({screen:'games'}),
+
+      budgets: BUD.map((label,i) => ({
+        label, pick: () => this.save({budget:i+1}),
+        bg: s.budget===i+1 ? '#2b271f' : 'rgba(255,255,255,.4)',
+        fg: s.budget===i+1 ? '#f7f0dd' : '#2b271f',
+        border: s.budget===i+1 ? '#2b271f' : '#cbbb95'
+      })),
+      distance: s.distance,
+      setDistance: e => this.save({distance:+e.target.value}),
+      distanceLabel: s.distance + (s.distance===1?' mile':' miles'),
+      runCats: chipsFor('cat'),
+      runFoods: chipsFor('food'),
+      runCustoms: chipsFor('mine'),
+      hasRunCustoms: ALL.some(c => c.kind === 'mine'),
+      fieldLabel: s.picked.length + ' of 6 · three minimum',
+      startLabel: s.picked.length >= 3 ? 'Save the rules' : 'Pick three or more',
+      startBg: s.picked.length >= 3 ? '#2b271f' : '#8f8874',
+      saveFilters: () => { if (s.picked.length >= 3) { this.setState({screen:'home'}); this.toast('Rules saved to this phone'); } },
+
+      roster: s.picked.map(id => {
+        const c = byId(id), who = claimsOf(id), isMine = who.some(p => p.id === 'me');
+        return {
+          name:c.name, silks: who.length ? who.map(p => p.name).join(', ') : c.silks,
+          imgCss:'url("'+artForGame(id, daily.n, s.picked.indexOf(id))+'")',
+          chips: who.map(p => ({key:p.id, name:p.name, imgCss:leafCss(p.avatar)})),
+          hasChips: who.length > 0,
+          noChips: who.length === 0,
+          open: () => this.setState({editing:id}),
+          bg: mine ? 'rgba(255,255,255,.66)' : 'rgba(255,255,255,.34)',
+          border: mine ? '#2b271f' : '#cbbb95',
+          shadow: mine ? '0 3px 0 rgba(43,39,31,.2)' : 'none',
+          bg: isMine ? 'rgba(255,255,255,.66)' : 'rgba(255,255,255,.34)',
+          border: isMine ? '#2b271f' : '#cbbb95',
+          shadow: isMine ? '0 3px 0 rgba(43,39,31,.2)' : 'none'
+        };
+      }),
+      backerSummary: openRunners > 0
+        ? claimedCount + (claimedCount===1 ? ' runner backed' : ' runners backed') + ' · ' + openRunners + ' still open'
+        : 'Every runner has somebody. Off you go.',
+      startRace: this.begin,
+
+      foodCount: ALL.length + ' on the card',
+      shedCats: shedFor('cat'),
+      shedFoods: shedFor('food'),
+      shedMine: shedFor('mine'),
+      hasShedMine: ALL.some(c => c.kind === 'mine'),
+      newFood: s.newFood,
+      setNewFood: e => this.setState({newFood:e.target.value}),
+      addFood: () => {
+        const nm = (s.newFood||'').trim().slice(0, NAME_MAX);
+        if (!nm) { this.toast('Type a food first'); return; }
+        if (!/[\p{L}\p{N}]/u.test(nm)) { this.toast('Give it a name with letters in it'); return; }
+        if (ALL.some(c => c.name.toLowerCase() === nm.toLowerCase())) { this.toast('Already on the card'); return; }
+        if ((s.customs||[]).length >= 20) { this.toast('Twenty custom foods is the limit'); return; }
+        this.save({customs:[...(s.customs||[]), {id:nextCustomId(), name:nm}], newFood:''});
+        this.toast(nm + ' added');
+      },
+      hasHidden: (s.hiddenFoods||[]).length > 0,
+      restoreLabel: 'Bring back ' + (s.hiddenFoods||[]).length + ' built-in ' + ((s.hiddenFoods||[]).length === 1 ? 'food' : 'foods'),
+      restoreFoods: () => this.save({hiddenFoods:[]}),
+      claimSheet: !!s.editing,
+      claimFood: s.editing ? byId(s.editing).name : '',
+      claimRows: (s.editing ? [{id:'me', name:(s.name || 'You'), avatar:s.avatar}].concat(s.people) : []).map(p => {
+        const on = ((s.claims||{})[s.editing] || []).includes(p.id);
+        const also = s.picked.filter(fid => fid !== s.editing && ((s.claims||{})[fid] || []).includes(p.id)).length;
+        return {
+          name: p.name, imgCss: leafCss(p.avatar),
+          also: also ? 'also on ' + also : '',
+          bg: on ? 'rgba(255,255,255,.66)' : 'rgba(255,255,255,.3)',
+          border: on ? '#2b271f' : '#cbbb95',
+          boxBorder: on ? '#2b271f' : '#b9a67c',
+          boxBg: on ? '#2b271f' : 'transparent',
+          tick: on ? '\u2713' : '',
+          toggle: () => {
+            const claims = {...(s.claims||{})};
+            const list = (claims[s.editing] || []).slice();
+            const at = list.indexOf(p.id);
+            if (at > -1) list.splice(at,1); else list.push(p.id);
+            if (list.length) claims[s.editing] = list; else delete claims[s.editing];
+            this.save({claims});
+          }
+        };
+      }),
+      draftName: s.draftName,
+      setDraftName: e => this.setState({draftName:e.target.value}),
+      addPerson: () => {
+        const nm = (s.draftName||'').trim().slice(0, NAME_MAX);
+        if (!nm) { this.toast('Give them a name'); return; }
+        if (s.people.length >= MAX_PLAYERS - 1) { this.toast('Five guests is the limit'); return; }
+        if (s.people.some(p => p.name.toLowerCase() === nm.toLowerCase())) { this.toast('Already in the room'); return; }
+        const person = {id:'p'+Date.now(), name:nm, avatar:(s.people.length + 1) % AV.length};
+        const claims = {...(s.claims||{})};
+        claims[s.editing] = (claims[s.editing] || []).concat(person.id);
+        this.save({people:[...s.people, person], claims, draftName:''});
+      },
+      hasPeople: s.people.length > 0,
+      noPeople: s.people.length === 0,
+      roomHasSpace: s.people.length < MAX_PLAYERS - 1,
+      roomFull: s.people.length >= MAX_PLAYERS - 1,
+      roomDraft: s.roomDraft || '',
+      roomLeafCss: leafCss((s.roomLeaf ?? (s.people.length + 1)) % AV.length),
+      setRoomDraft: e => this.setState({roomDraft:e.target.value}),
+      cycleRoomLeaf: () => this.setState({roomLeaf: ((s.roomLeaf ?? (s.people.length + 1)) + 1) % AV.length}),
+      addRoomPerson: () => {
+        const nm = (s.roomDraft||'').trim();
+        if (!nm) { this.toast('Give them a name'); return; }
+        if (s.people.length >= MAX_PLAYERS - 1) { this.toast('Five guests is the limit'); return; }
+        if (nm.toLowerCase() === (s.name||'').trim().toLowerCase()) { this.toast('That\u2019s you already'); return; }
+        if (s.people.some(p => p.name.toLowerCase() === nm.toLowerCase())) { this.toast('Already in the room'); return; }
+        this.save({people:[...s.people, {id:'p'+Date.now(), name:nm, avatar:(s.roomLeaf ?? (s.people.length + 1)) % AV.length}], roomDraft:'', roomLeaf:null});
+        this.toast(nm + ' joined the room');
+      },
+      peopleCount: s.people.length + ' of 5 guests saved',
+      peopleChips: s.people.map(p => ({
+        name:p.name, imgCss:leafCss(p.avatar),
+        use: () => this.setState({draftName:p.name, draftAvatar:p.avatar}),
+        forget: () => {
+          const claims = {};
+          Object.keys(s.claims||{}).forEach(k => {
+            const list = (s.claims[k]||[]).filter(x => x !== p.id);
+            if (list.length) claims[k] = list;
+          });
+          this.save({people: s.people.filter(x=>x.id!==p.id), claims});
+        }
+      })),
+
+      lanes: this.raceField().map(id => {
+        const c = byId(id), who = claimsOf(id), isMine = who.some(p => p.id === 'me');
+        return {
+          name:c.name, tone:c.tone, imgCss:'url("'+artFor(id)+'")',
+          left: ((s.prog[id]||0)*100).toFixed(2) + '%',
+          tokenBorder: isMine ? 'solid' : 'dashed',
+          tokenBg: isMine ? 'rgba(255,255,255,.62)' : 'rgba(255,255,255,.24)',
+          tokenShadow: isMine ? '0 2px 0 rgba(43,39,31,.22)' : 'none',
+          mineOpacity: isMine ? 1 : 0,
+          backer: who.length ? who.map(p=>p.name).join(', ') : '', backerOpacity: who.length ? 1 : 0
+        };
+      }),
+      isPlinko: s.gameN === G_WALNUT,
+      isFrog: s.gameN === G_FROG,
+      isCorgi: s.gameN !== G_WALNUT && s.gameN !== G_FROG,
+      pondH: FROG.H,
+      pondPads: (s.pond || []).map(p => ({key:'pd'+p.i, left:(p.x/FROG.W*100).toFixed(2) + '%', top:p.y.toFixed(1) + 'px', art:PAD_ART(p.v), z: Math.round(p.y)})),
+      pondFrogs: (s.frogs || []).map((f, k) => {
+        const c = byId(f.id), w = claimsOf(f.id);
+        const jumping = f.jt >= 0;
+        return {
+          key: f.id, name: c.name,
+          left: Math.min(100, f.x/FROG.W*100).toFixed(2) + '%',
+          top: (f.y + 5 - (f.hop || 0)).toFixed(1) + 'px',
+          z: Math.round(f.y) + 200,
+          art: FROG_ART(jumping ? 'jump' : 'sit', (k % 6) + 1),
+          fw: jumping ? 40 : 34,
+          fh: jumping ? 31 : 23,
+          backer: w.length ? w.map(p => p.name).join(' + ') : '',
+          backerOpacity: w.length ? 1 : 0
+        };
+      }),
+      pondSparks: (s.petals || []).map(p => ({key:p.key, left:(p.x/FROG.W*100).toFixed(2) + '%', top:p.y.toFixed(1) + 'px', s:p.s, c:p.c, r:p.r, o:p.o})),
+      pegs: (s.board.pegs || []).map((p,i) => ({key:'pg'+i, x:p.x.toFixed(1), y:p.y.toFixed(1), d:(p.r*2 + 5).toFixed(0), art:'url("' + p.art + '")'})),
+      bumpers: (s.board.bumpers || []).map((p,i) => ({key:'bm'+i, x:p.x.toFixed(1), y:p.y.toFixed(1), d:(p.r*2 + 6).toFixed(0), art:'url("' + p.art + '")'})),
+      balls: (s.balls || []).map(b => ({
+        key: b.id, x: b.x.toFixed(1), y: b.y.toFixed(1), d: (PLINK.R*2).toFixed(0),
+        art: 'url("' + BALL_ART(b.art) + '")', name: byId(b.id).name, rot: (b.rot || 0).toFixed(1),
+        backer: (() => { const w = claimsOf(b.id); return w.length ? w.map(x=>x.name).join(' + ') : ''; })(),
+        backerOpacity: claimsOf(b.id).length ? 1 : 0
+      })),
+      sparks: s.sparks || [],
+      plinkoMeta: s.started ? (s.winner ? 'OVER THE LINE' : 'DROPPING') : 'READY TO DROP',
+      petals: s.petals,
+      clock: mm + ':' + String(ss).padStart(2,'0'),
+      raceHeadline: !s.started
+        ? (s.gameN === G_WALNUT ? 'Balls in the hopper' : (s.gameN === G_FROG ? 'On the lily pads' : 'Under starter\u2019s orders'))
+        : (s.winner ? 'Photo finish' : (s.elapsed < 2 ? (s.gameN === G_WALNUT ? 'And they drop' : (s.gameN === G_FROG ? 'And they hop' : 'And they\u2019re off')) : (s.gameN === G_WALNUT ? plinkoLeader + ' leads' : byId(leader).name + ' leads'))),
+      tapHint: !s.started ? (s.gameN === G_WALNUT ? (this.raceField().length + ' walnuts in the hopper. Drop when the room is ready.') : (s.gameN === G_FROG ? (this.raceField().length + ' frogs on the first pad. Start when the room is ready.') : 'Corgis are at the line. Start when the room is ready.')) : (s.winner ? byId(s.winner).name + ' takes it.' : 'Cheer ' + byId(this.myRunner()).name + ' on.'),
+      tapMeta: s.started ? s.taps + (s.taps===1 ? ' CHEER' : ' CHEERS') : (Math.min(6, s.picked.length) + (s.gameN === G_WALNUT ? ' BALLS' : (s.gameN === G_FROG ? ' FROGS' : ' RUNNERS')) + ' \u00b7 ' + (s.gameN === G_WALNUT || s.gameN === G_FROG ? 'UNDER 20' : this._dur()) + 'S'),
+      tapBg: s.winner ? '#8f8874' : (s.started ? '#2b271f' : '#57764b'),
+      tapLabel: s.started ? 'Let\u2019s Go!' : (s.gameN === G_WALNUT ? 'Drop the Balls' : (s.gameN === G_FROG ? 'Start Hopping' : 'Start Race')),
+      press: this.press,
+
+      winnerName: win.name,
+      winnerCredit: (() => { const w = claimsOf(s.winner || win.id); return w.length ? w.map(p => p.name).join(' and ') + ' backed it' : 'nobody backed it, but you\u2019re still eating it'; })(),
+      noSpots,
+      hasSpots: !!s.winner && !noSpots,
+      retryBarred: () => { this.setState({screen:'paddock', barred:[...(s.barred||[]), win.id]}); this.toast(win.name + ' sits out the next race'); },
+      winnerBlurb: (s.gameN === G_WALNUT ? BLURB_PLINKO : (s.gameN === G_FROG ? BLURB_FROG : BLURB))[(s.taps + win.name.length) % 5] + ', out of ' + Math.min(6, s.picked.length) + ' in the field',
+      attribution: 'POWERED BY GOOGLE',
+      queryLine: win.name.toUpperCase() + ' · ≤' + s.distance + 'MI · ' + BUD[s.budget-1] + ' · +PHOTOS',
+      spots,
+      again: () => this.setState({screen:'paddock', barred:[]}),
+      adVisible: showAd, proVisible: !showAd,
+      toPro: () => this.setState({sheet:'pro'}),
+      buyPro: () => { this.save({pro:true, sheet:null}); this.toast('Pro unlocked. Pick any game.'); },
+      dropPro: () => this.save({pro:false}),
+      proSheet: s.sheet === 'pro',
+
+      linkSheet: !!s.link,
+      linkTitle: s.link ? 'Opening ' + s.link.app : '',
+      linkUrl: s.link ? s.link.url : '',
+      linkFallback: s.link ? s.link.fb : '',
+      closeSheets: () => { cancelAnimationFrame(this._praf); this.setState({sheet:null, link:null, editing:null, peek:null}); },
+
+      hasHistory: s.history.length > 0,
+      noHistory: s.ready && s.history.length === 0,
+      recent: s.history.slice(0,3).map(h => ({
+        when:this.ago(h.t), winner:h.winner,
+        detail: h.found === false ? 'nothing nearby that night' : 'won the field of ' + h.field
+      })),
+      history: s.history.map(h => ({
+        when:this.ago(h.t), winner:h.winner, imgCss:'url("'+almanacImg(h.winner, h.g)+'")',
+        detail: (h.found === false ? 'nothing nearby · ' : '') + h.field + ' in the field · ' + h.taps + (h.taps===1?' cheer':' cheers')
+      })),
+      standings,
+      almanacSub: s.history.length
+        ? s.history.length + (s.history.length===1?' dinner':' dinners') + ' settled on this phone'
+        : 'nothing settled yet',
+
+      storageLine: 'One key in local storage: your name and ingredient, filters, ' + s.people.length + ' saved names, ' + s.history.length + ' race results (food and date only), Pro flag. Roughly ' + Math.max(1, Math.round(JSON.stringify(s.history).length/1024)) + ' KB.',
+      wipe: () => {
+        try { localStorage.removeItem(KEY); } catch(e){}
+        cancelAnimationFrame(this._raf);
+        this.setState({screen:'setup', name:'', avatar:0, budget:2, distance:6,
+          picked:['pizza','burgers','thai','tacos','ramen'], runner:'thai',
+          people:[], claims:{}, customs:[], hiddenFoods:[], barred:[], newFood:'', history:[], pro:false, favs:[], peek:null, editing:null, draftName:'', draftAvatar:1,
+          gameN:G_CORGI, balls:[], frogs:[], pond:[], board:{pegs:[],bumpers:[]}, sparks:[], chosen:null,
+          prog:{}, taps:0, petals:[], elapsed:0, winner:null, sheet:null, link:null});
+      },
+      savedToast: s.toast,
+
+      galleryNote: s.favs.length
+        ? s.favs.length + (s.favs.length===1 ? ' game starred \u2014 only that one is drawn' : ' games starred \u2014 only those are drawn')
+        : 'Star the ones you like and the daily draw sticks to them.',
+      favNote: s.favs.length ? s.favs.length + ' starred' : 'drawn from every built game',
+      gallery: GAME_GROUPS.map(title => ({
+        title: title.toUpperCase(),
+        items: GAMES.filter(g => g.group === title).map(g => {
+          const on = s.favs.includes(g.n);
+          return {
+            name: g.name, desc: g.desc,
+            tag: g.built ? 'READY TO PLAY' : 'COMING SOON',
+            tagColor: g.built ? '#57764b' : '#b0a488',
+            bg: g.built ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.22)',
+            border: g.built ? '#2b271f' : '#dbcfaf',
+            opacity: g.built ? 1 : 0.72,
+            cursor: g.built ? 'pointer' : 'default',
+            thumbBg: !g.built ? 'rgba(120,95,50,.07)' : shotFor(g.n).bg,
+            thumbCss: !g.built ? 'none' : (g.n === G_FROG ? POND_CSS : (g.n === G_WALNUT ? "url('art/food_ball_4.png'), url('art/food_ball_2.png'), url('art/obstacle_peg_2.png'), url('art/board_background.png')" : "url('art/corgi-4.png'), url('art/track.png')")),
+            thumbSize: !g.built ? 'auto' : (g.n === G_FROG ? POND_THUMB : (g.n === G_WALNUT ? '17px auto, 15px auto, 12px auto, 190% auto' : '52px auto, 100% auto')),
+            thumbPos: !g.built ? 'center' : (g.n === G_FROG ? POND_POS : (g.n === G_WALNUT ? '34% 40%, 62% 27%, 50% 15%, center bottom' : '58% 74%, top center')),
+            starGlyph: on ? '\u2605' : '\u2606',
+            starColor: g.built ? (on ? '#a8781c' : '#b0a488') : '#d0c6ac',
+            starBorder: on ? '#a8781c' : '#d6c8a4',
+            open: () => this.openPeek(g.n),
+            star: () => this.toggleFav(g.n)
+          };
+        })
+      })),
+      peekOpen: !!s.peek,
+      peekIsPlinko: s.peek === G_WALNUT,
+      peekIsFrog: s.peek === G_FROG,
+      peekIsCorgi: !!s.peek && s.peek !== G_WALNUT && s.peek !== G_FROG,
+      peekFrogs: s.peek === G_FROG ? (this._plane || []).map((p,i) => {
+        const t = ((s.peekT || 0) + p.ph) % p.dur / p.dur;
+        const ph = (t*7) % 1;
+        const air = ph > 0.42;
+        const hop = Math.sin(Math.min(1, ph/0.42)*Math.PI);
+        return {
+          left: (8 + t*78).toFixed(2) + '%',
+          top: (62 + i*32 - hop*15).toFixed(1) + 'px',
+          padTop: (62 + i*32).toFixed(1) + 'px',
+          art: FROG_ART(air ? 'jump' : 'sit', i*2 + 1),
+          padArt: PAD_ART(1 + i % 4),
+          fw: air ? 38 : 32,
+          fh: air ? 29 : 22
+        };
+      }) : [],
+      peekH: s.peek === G_WALNUT ? 200 : 168,
+      peekBg: s.peek === G_WALNUT ? '#cfd6b4' : (s.peek === G_FROG ? '#8aacb4' : '#a89a6f'),
+      peekBgImg: s.peek === G_WALNUT ? "url('art/board_background.png')" : (s.peek === G_FROG ? "url('art/frogjump_preview.png')" : "url('art/track.png')"),
+      peekBgSize: s.peek === G_WALNUT ? '100% 100%' : (s.peek === G_FROG ? 'cover' : '100% auto'),
+      peekPegs: s.peek === G_WALNUT ? (this._ppegs || []).map((p,i) => ({key:'pp'+i, x:p.x.toFixed(1), y:p.y.toFixed(1), d:(p.r*2+4).toFixed(0), art:'url("' + p.art + '")'})) : [],
+      peekBalls: s.peek === G_WALNUT ? (s.peekBalls || []).map((b,i) => ({key:'pb'+i, x:b.x.toFixed(1), y:b.y.toFixed(1), d:(PEEK_P.R*2).toFixed(0), art:'url("' + BALL_ART(b.art) + '")'})) : [],
+      peekName: peekGame ? peekGame.name : '',
+      peekDesc: peekGame ? peekGame.desc : '',
+      peekRules: peekGame ? peekGame.rules : '',
+      peekStarLabel: peekFav ? 'Favorited \u2605' : 'Favorite this game',
+      peekStarBg: peekFav ? '#a8781c' : 'transparent',
+      peekStarFg: peekFav ? '#f7f0dd' : '#2b271f',
+      peekStarBorder: peekFav ? '#a8781c' : '#2b271f',
+      peekStar: () => this.toggleFav(s.peek),
+      peekLanes: (s.peek === G_WALNUT || s.peek === G_FROG ? [] : (this._plane || [])).map((p,i) => {
+        const t = ((s.peekT || 0) + p.ph) % p.dur / p.dur;
+        return { imgCss: p.img, left: (8 + t*80).toFixed(2) + '%', top: (68 + i*32) + 'px' };
+      }),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
