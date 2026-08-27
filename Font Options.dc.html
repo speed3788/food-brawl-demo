@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&family=Caveat:wght@500;600;700&family=Patrick+Hand&family=Kalam:wght@400;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet"><style>
+html,body{margin:0;background:#d9d0bc;background-image:radial-gradient(120% 80% at 50% 0%,rgba(255,255,255,.5),transparent 70%),repeating-linear-gradient(96deg,rgba(120,95,50,.05) 0 3px,transparent 3px 9px);font-family:'Newsreader',Georgia,serif;color:#2b271f}
+a{color:#a8781c}a:hover{color:#8a6110}
+</style></helmet>
+
+<div style="min-height:100vh;box-sizing:border-box;padding:34px 30px 44px;display:flex;flex-direction:column;gap:22px">
+
+<div style="max-width:820px;display:flex;flex-direction:column;gap:9px">
+  <div style="font-family:'Shadows Into Light',cursive;font-size:42px;line-height:1">Font options</div>
+  <div style="font-size:15px;line-height:1.6;color:#5d5544">Same card five times. <b>A</b> is what the app uses now. Each one is shown at the real sizes from the app, including the small print, because that is where the current font falls apart. Tell me a letter.</div>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+  <sc-for list="{{ options }}" as="o" hint-placeholder-count="5">
+    <div style="width:326px;display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;align-items:baseline;gap:9px">
+        <div style="font:700 12px ui-monospace,Menlo,monospace;background:{{ o.tagBg }};color:{{ o.tagFg }};padding:3px 8px;border-radius:4px">{{ o.letter }}</div>
+        <div style="font-size:15px;font-weight:600">{{ o.name }}</div>
+      </div>
+      <div style="border:1px solid #cbbb95;border-radius:7px;overflow:hidden;background:#f7f0dd;background-image:radial-gradient(120% 90% at 12% 0%,rgba(255,255,255,.7),transparent 60%),repeating-linear-gradient(102deg,rgba(120,95,50,.045) 0 2px,transparent 2px 6px);box-shadow:0 8px 18px rgba(43,39,31,.13)">
+        <div style="padding:16px 18px 18px;display:flex;flex-direction:column;gap:13px">
+          <div style="display:flex;align-items:center;gap:11px">
+            <div style="width:40px;height:40px;flex:none;border-radius:50%;border:1px solid #cbbb95;background:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center">
+              <div style="width:19px;height:19px;background:#a8781c;border-radius:50% 0 50% 0;transform:rotate(35deg)"></div>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12.5px;font-style:italic;color:#7d7460">welcome back</div>
+              <div style="font-family:{{ o.display }};font-weight:{{ o.dw }};font-size:{{ o.s30 }}px;line-height:1.1">Bradley</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-family:{{ o.display }};font-weight:{{ o.dw }};font-size:{{ o.s28 }}px;color:#a8781c;line-height:1">12</div>
+              <div style="font:8.5px/1.6 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.08em">SETTLED</div>
+            </div>
+          </div>
+          <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+          <div>
+            <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">TONIGHT'S RACE</div>
+            <div style="font-family:{{ o.display }};font-weight:{{ o.dw }};font-size:{{ o.s40 }}px;line-height:1.1;margin-top:5px">Walnut Drop</div>
+            <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:3px">under 20 seconds · Top to Bottom</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <div style="padding:6px 12px;border:1px solid #d6c8a4;border-radius:999px;background:rgba(255,255,255,.5);font-size:13px;display:flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50% 0 50% 0;background:#a8781c;transform:rotate(45deg)"></span>Pizza</div>
+            <div style="padding:6px 12px;border:1px solid #d6c8a4;border-radius:999px;background:rgba(255,255,255,.5);font-size:13px;display:flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50% 0 50% 0;background:#57764b;transform:rotate(45deg)"></span>Thai</div>
+            <div style="padding:6px 12px;border:1px solid #d6c8a4;border-radius:999px;background:rgba(255,255,255,.5);font-size:13px;display:flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50% 0 50% 0;background:#6b5340;transform:rotate(45deg)"></span>Ramen</div>
+          </div>
+          <div style="text-align:center;background:#2b271f;color:#f7f0dd;padding:14px;border-radius:4px;font-family:{{ o.display }};font-weight:{{ o.dw }};font-size:{{ o.s28 }}px;line-height:1;box-shadow:0 3px 0 rgba(43,39,31,.28)">Run the derby</div>
+          <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">SMALL PRINT · WHERE IT MATTERS</div>
+            <div style="display:flex;align-items:baseline;gap:9px;padding-bottom:6px;border-bottom:1px dotted rgba(120,95,50,.3)">
+              <div style="font:9.5px/1.6 ui-monospace,Menlo,monospace;color:#9b8f73;width:48px;flex:none">today</div>
+              <div style="flex:1"><span style="font-family:{{ o.small }};font-weight:{{ o.sw }};font-size:{{ o.s20 }}px">Ramen</span> <span style="font-style:italic;color:#7d7460;font-size:13px">Wildwood Noodle Bar</span></div>
+            </div>
+            <div style="display:flex;gap:7px">
+              <div style="padding:6px 11px;border:1px solid #cbbb95;border-radius:999px;background:rgba(255,255,255,.5);font-family:{{ o.small }};font-weight:{{ o.sw }};font-size:{{ o.s20 }}px">Bradley</div>
+              <div style="padding:6px 11px;border:1px solid #cbbb95;border-radius:999px;background:rgba(255,255,255,.5);font-family:{{ o.small }};font-weight:{{ o.sw }};font-size:{{ o.s20 }}px">Mia + Sam</div>
+            </div>
+            <div style="display:inline-flex;align-self:flex-start;padding:1px 6px;border-radius:2px;background:rgba(247,240,221,.9);border:1px solid #ded0ac;font-family:{{ o.small }};font-weight:{{ o.sw }};font-size:{{ o.s14 }}px;line-height:1.25">nameplate on the runner</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:13.5px;line-height:1.55;color:#5d5544">{{ o.note }}</div>
+    </div>
+  </sc-for>
+</div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1120,&quot;height&quot;:900}}">
+const OPTS = [
+  {
+    letter:'A', name:'Shadows Into Light — what you have now',
+    display:"'Shadows Into Light', cursive", dw:400,
+    small:"'Shadows Into Light', cursive", sw:400,
+    s40:40, s30:30, s28:26, s20:20, s14:14,
+    note:'One weight, thin strokes, small x-height. Fine on a big title, but the nameplates and backer chips are where your friend is struggling.'
+  },
+  {
+    letter:'B', name:'Caveat',
+    display:"'Caveat', cursive", dw:600,
+    small:"'Caveat', cursive", sw:600,
+    s40:44, s30:33, s28:29, s20:23, s14:16,
+    note:'Closest to what you have, just thicker and taller. Has a real bold weight, so small text can carry more ink. Needs about 10% more size to match optically.'
+  },
+  {
+    letter:'C', name:'Patrick Hand',
+    display:"'Patrick Hand', cursive", dw:400,
+    small:"'Patrick Hand', cursive", sw:400,
+    s40:38, s30:29, s28:25, s20:20, s14:14.5,
+    note:'Hand-lettered rather than handwritten — letters sit apart instead of joining. The most legible of the handwriting options at small sizes. Slightly less romantic.'
+  },
+  {
+    letter:'D', name:'Kalam',
+    display:"'Kalam', cursive", dw:700,
+    small:"'Kalam', cursive", sw:700,
+    s40:36, s30:27, s28:23, s20:18, s14:13,
+    note:'Marker-pen weight. Very sturdy at tiny sizes, which suits the nameplates on moving runners. Runs wide, so long food names need watching.'
+  },
+  {
+    letter:'E', name:'Hybrid — handwriting big, Newsreader small',
+    display:"'Caveat', cursive", dw:600,
+    small:"'Newsreader', Georgia, serif", sw:600,
+    s40:44, s30:33, s28:29, s20:16, s14:12,
+    note:'Handwriting only above about 20px; everything smaller switches to the serif already in the app. Keeps the character where it reads as charm and drops it where it reads as noise. My recommendation.'
+  }
+];
+
+class Component extends DCLogic {
+  renderVals(){
+    return {
+      options: OPTS.map(o => ({
+        ...o,
+        tagBg: o.letter === 'A' ? 'rgba(43,39,31,.12)' : (o.letter === 'E' ? '#57764b' : '#2b271f'),
+        tagFg: o.letter === 'A' ? '#2b271f' : '#f7f0dd'
+      }))
+    };
+  }
+}
+
+</script>
+</body>
+</html>

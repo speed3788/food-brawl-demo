@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#e8e2d4;font-family:'Newsreader',Georgia,serif}
+.dv-turn{padding:44px 48px 34px;border-bottom:1px solid rgba(43,39,31,.12);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2b271f;color:#f7f0dd;border-radius:4px;text-decoration:none}
+.dv-tname{font:500 14px/1.2 'Newsreader',serif;color:#2b271f}
+.dv-opts{display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(43,39,31,.1);color:#2b271f;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 'Newsreader',serif;color:rgba(43,39,31,.62);max-width:402px}
+.dv-opt:target .dv-oid{background:#a8781c;color:#fff}
+.dv-next{margin:26px 0 0;font:13px/1.6 'Newsreader',serif;color:rgba(43,39,31,.55)}
+.dv-note{max-width:760px;margin:0 0 26px;font:14px/1.65 'Newsreader',serif;color:rgba(43,39,31,.72)}
+.dv-note b{font-weight:600;color:#2b271f}
+input[type=range]{accent-color:#a8781c}
+a{color:#a8781c}a:hover{color:#8a6110}
+</style></helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Food Brawl — Corgi Derby loop, Rustic Cottagecore</span></div>
+<p class="dv-note">Read of the brief: <b>Corgi Derby</b> is the playable mini-game, food categories run as NPC lanes, tapping gives fractional nudges only, and no odds appear anywhere. <a class="dv-oid" href="#1a">1a</a> is the working loop — profile → filters → paddock → race → result card — all state local, no backend. <a class="dv-oid" href="#1b">1b</a>–<a class="dv-oid" href="#1d">1d</a> are alternates for the three screens you flagged, and <a class="dv-oid" href="#1e">1e</a> is the type/texture kit they all draw from. Art is placeholder slots throughout; every restaurant name is invented.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Playable loop. Tap through it — the race is real, and the "Let's Go!" button really does nudge your runner.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;background:#f7f0dd;background-image:radial-gradient(120% 90% at 12% 0%,rgba(255,255,255,.7),transparent 60%),radial-gradient(90% 70% at 88% 100%,rgba(180,150,95,.2),transparent 65%),repeating-linear-gradient(102deg,rgba(120,95,50,.045) 0 2px,transparent 2px 6px),repeating-linear-gradient(8deg,rgba(120,95,50,.035) 0 1px,transparent 1px 5px);font-family:'Newsreader',Georgia,serif;color:#2b271f">
+
+<sc-if value="{{ isProfile }}" hint-placeholder-val="{{ true }}">
+<div style="padding:74px 26px 44px;display:flex;flex-direction:column;gap:26px;flex:1">
+  <div style="text-align:center">
+    <div style="font-family:'Shadows Into Light',cursive;font-size:52px;line-height:1;letter-spacing:.01em">Food Brawl</div>
+    <div style="font-size:14px;font-style:italic;color:#6b6250;margin-top:8px">settle supper the sporting way</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;justify-content:center">
+    <div style="height:1px;width:64px;background:linear-gradient(90deg,transparent,#cbbb95)"></div>
+    <div style="width:9px;height:9px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(45deg);opacity:.75"></div>
+    <div style="width:6px;height:6px;background:#a8781c;border-radius:50%;opacity:.55"></div>
+    <div style="width:9px;height:9px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(225deg);opacity:.75"></div>
+    <div style="height:1px;width:64px;background:linear-gradient(270deg,transparent,#cbbb95)"></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="font-family:'Shadows Into Light',cursive;font-size:24px">What shall we call you?</div>
+    <input type="text" value="{{ name }}" onChange="{{ setName }}" placeholder="Wren" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.42);border:1px solid #cbbb95;border-radius:3px;padding:13px 14px;font-family:'Shadows Into Light',cursive;font-size:26px;color:#2b271f;outline:none">
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="font-family:'Shadows Into Light',cursive;font-size:24px">Pick an ingredient</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+      <sc-for list="{{ avatars }}" as="a" hint-placeholder-count="6">
+        <button onClick="{{ a.pick }}" style="all:unset;cursor:pointer;aspect-ratio:1;border-radius:50%;border:{{ a.ring }};background:{{ a.bg }};display:flex;align-items:center;justify-content:center;box-shadow:{{ a.shadow }}">
+          <div style="width:26px;height:26px;background:{{ a.tone }};border-radius:50% 0 50% 0;transform:rotate({{ a.rot }}deg)"></div>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="flex:1"></div>
+  <button onClick="{{ toFilters }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Shadows Into Light',cursive;font-size:26px;box-shadow:0 3px 0 rgba(43,39,31,.28)">Keep on this phone</button>
+  <div style="text-align:center;font-size:12.5px;font-style:italic;color:#7d7460;line-height:1.5">Saved to your device only. No account, no cloud, nothing to log into.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isFilters }}" hint-placeholder-val="{{ false }}">
+<div style="padding:66px 26px 40px;display:flex;flex-direction:column;gap:28px;flex:1">
+  <div>
+    <div style="font-family:'Shadows Into Light',cursive;font-size:38px;line-height:1.05">Set the rules</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">These become the search when someone wins.</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="font-family:'Shadows Into Light',cursive;font-size:23px">Budget</div>
+    <div style="display:flex;gap:9px">
+      <sc-for list="{{ budgets }}" as="b" hint-placeholder-count="4">
+        <button onClick="{{ b.pick }}" style="all:unset;cursor:pointer;flex:1;text-align:center;padding:13px 0;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.fg }};border-radius:3px;font-family:'Shadows Into Light',cursive;font-size:22px">{{ b.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font-family:'Shadows Into Light',cursive;font-size:23px">How far you'll go</div>
+      <div style="font-family:'Shadows Into Light',cursive;font-size:23px;color:#a8781c">{{ distanceLabel }}</div>
+    </div>
+    <input type="range" min="1" max="15" step="1" value="{{ distance }}" onChange="{{ setDistance }}" style="width:100%">
+    <div style="display:flex;justify-content:space-between;font-size:11.5px;font-style:italic;color:#8a8069"><span>next street</span><span>worth the drive</span></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:11px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font-family:'Shadows Into Light',cursive;font-size:23px">Who's running</div>
+      <div style="font-size:12.5px;font-style:italic;color:#8a8069">{{ fieldLabel }}</div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:9px">
+      <sc-for list="{{ cuisineChips }}" as="c" hint-placeholder-count="8">
+        <button onClick="{{ c.toggle }}" style="all:unset;cursor:pointer;padding:9px 15px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};border-radius:999px;font-size:15px;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50% 0 50% 0;background:{{ c.dot }};transform:rotate(45deg)"></span>{{ c.name }}
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="flex:1"></div>
+  <button onClick="{{ toLobby }}" style="all:unset;cursor:pointer;text-align:center;background:{{ startBg }};color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Shadows Into Light',cursive;font-size:26px;box-shadow:0 3px 0 rgba(43,39,31,.28)">{{ startLabel }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLobby }}" hint-placeholder-val="{{ false }}">
+<div style="padding:66px 26px 40px;display:flex;flex-direction:column;gap:20px;flex:1">
+  <div>
+    <div style="font-family:'Shadows Into Light',cursive;font-size:38px;line-height:1.05">Tonight's field</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">Corgi Derby · three hurdles · {{ raceLenLabel }}</div>
+  </div>
+  <div style="font-size:14px;color:#5d5544;line-height:1.5;border-left:2px solid #cbbb95;padding-left:12px">Back one runner. Your taps in the race are worth a whisker each — not a win.</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <sc-for list="{{ roster }}" as="r" hint-placeholder-count="5">
+      <button onClick="{{ r.pick }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:13px;padding:11px 13px;border:1px solid {{ r.border }};background:{{ r.bg }};border-radius:5px;box-shadow:{{ r.shadow }}">
+        <div style="width:46px;height:46px;flex:none;border-radius:9px;border:1px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.11) 0 4px,transparent 4px 8px);display:flex;align-items:center;justify-content:center;font:8.5px/1.15 ui-monospace,Menlo,monospace;color:#8a7c5c;text-align:center;padding:2px">{{ r.slot }}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'Shadows Into Light',cursive;font-size:25px;line-height:1.1">{{ r.name }}</div>
+          <div style="font-size:12.5px;font-style:italic;color:#7d7460">{{ r.silks }}</div>
+        </div>
+        <div style="width:20px;height:20px;flex:none;border-radius:50%;border:1.5px solid {{ r.dotBorder }};background:{{ r.dotBg }}"></div>
+      </button>
+    </sc-for>
+  </div>
+  <div style="flex:1"></div>
+  <button onClick="{{ startRace }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Shadows Into Light',cursive;font-size:26px;box-shadow:0 3px 0 rgba(43,39,31,.28)">To the starting line</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRace }}" hint-placeholder-val="{{ false }}">
+<div style="padding:62px 0 26px;display:flex;flex-direction:column;flex:1">
+  <div style="padding:0 24px;display:flex;justify-content:space-between;align-items:baseline">
+    <div style="font-family:'Shadows Into Light',cursive;font-size:30px">{{ raceHeadline }}</div>
+    <div style="font-family:'Shadows Into Light',cursive;font-size:26px;color:#a8781c">{{ clock }}</div>
+  </div>
+  <div style="margin:16px 14px 0;position:relative;border-top:1px solid #cbbb95;border-bottom:1px solid #cbbb95;background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(150,120,70,.07));padding:8px 0">
+    <div style="position:absolute;top:0;bottom:0;right:30px;width:0;border-left:2px dashed #2b271f;opacity:.5"></div>
+    <div style="position:absolute;top:-1px;right:22px;font:8px/1 ui-monospace,Menlo,monospace;color:#8a7c5c;transform:rotate(90deg);transform-origin:left top">FINISH</div>
+    <sc-for list="{{ lanes }}" as="l" hint-placeholder-count="5">
+      <div style="position:relative;height:66px;border-bottom:1px dotted rgba(120,95,50,.35)">
+        <div style="position:absolute;left:8px;top:6px;font-size:11px;font-style:italic;color:#8a8069">{{ l.name }}</div>
+        <div style="position:absolute;left:34%;top:0;bottom:0;width:3px;background:#9c8a5f;opacity:.5"></div>
+        <div style="position:absolute;left:64%;top:0;bottom:0;width:3px;background:#9c8a5f;opacity:.5"></div>
+        <div style="position:absolute;left:26px;right:26px;top:0;bottom:0">
+          <div style="position:absolute;top:56%;left:{{ l.left }};transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:40px;height:34px;border-radius:8px;border:1.5px {{ l.tokenBorder }} {{ l.tone }};background:repeating-linear-gradient(45deg,rgba(120,95,50,.13) 0 4px,transparent 4px 8px),{{ l.tokenBg }};display:flex;align-items:center;justify-content:center;font:7.5px/1.1 ui-monospace,Menlo,monospace;color:#7a6c4e;text-align:center;box-shadow:{{ l.tokenShadow }}">{{ l.slot }}</div>
+            <div style="font-family:'Shadows Into Light',cursive;font-size:13px;color:{{ l.tone }};opacity:{{ l.mineOpacity }}">yours</div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+    <sc-for list="{{ petals }}" as="p" hint-placeholder-count="0">
+      <div style="position:absolute;left:{{ p.x }}px;top:{{ p.y }}px;width:{{ p.s }}px;height:{{ p.s }}px;background:{{ p.c }};border-radius:50% 0 50% 0;transform:rotate({{ p.r }}deg);opacity:{{ p.o }};pointer-events:none"></div>
+    </sc-for>
+  </div>
+  <div style="flex:1"></div>
+  <div style="padding:0 26px;display:flex;flex-direction:column;gap:12px;align-items:center">
+    <div style="font-size:13px;font-style:italic;color:#7d7460;text-align:center">{{ tapHint }}</div>
+    <button onPointerDown="{{ tap }}" style="all:unset;cursor:pointer;width:100%;box-sizing:border-box;text-align:center;background:{{ tapBg }};color:#f7f0dd;padding:22px;border-radius:6px;font-family:'Shadows Into Light',cursive;font-size:40px;line-height:1;box-shadow:0 4px 0 rgba(43,39,31,.3);transform:scale({{ tapScale }})" style-active="transform:scale(.985)">Let's Go!</button>
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.06em;white-space:nowrap">{{ tapMeta }}</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+<div style="padding:62px 0 26px;display:flex;flex-direction:column;flex:1">
+  <div style="padding:0 24px">
+    <div style="font-size:12px;font-style:italic;color:#8a8069;letter-spacing:.04em">the winner is</div>
+    <div style="font-family:'Shadows Into Light',cursive;font-size:50px;line-height:1.02;margin-top:2px">{{ winnerName }}</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">{{ winnerBlurb }}</div>
+  </div>
+  <div style="margin:14px 24px 0;height:1px;background:linear-gradient(90deg,#cbbb95,transparent)"></div>
+  <div style="padding:14px 24px 0;font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.06em">{{ queryLine }}</div>
+  <div style="padding:12px 24px 0;display:flex;flex-direction:column;gap:11px">
+    <sc-for list="{{ spots }}" as="s" hint-placeholder-count="4">
+      <div style="border:1px solid #cbbb95;border-radius:5px;background:rgba(255,255,255,.44);padding:13px 14px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+          <div style="font-family:'Shadows Into Light',cursive;font-size:26px;line-height:1.1">{{ s.name }}</div>
+          <div style="font-size:13px;color:#6b6250;white-space:nowrap">{{ s.meta }}</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ s.links }}" as="k" hint-placeholder-count="3">
+            <button style="all:unset;cursor:pointer;flex:1;text-align:center;padding:9px 0;border:1px solid {{ k.border }};background:{{ k.bg }};color:{{ k.fg }};border-radius:3px;font-size:13.5px">{{ k.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="flex:1"></div>
+  <div style="padding:18px 24px 0;display:flex;flex-direction:column;gap:9px">
+    <button onClick="{{ again }}" style="all:unset;cursor:pointer;text-align:center;background:#2b271f;color:#f7f0dd;padding:15px;border-radius:4px;font-family:'Shadows Into Light',cursive;font-size:25px;box-shadow:0 3px 0 rgba(43,39,31,.28)">Run it again</button>
+    <sc-if value="{{ adVisible }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+        <div style="width:100%;height:52px;border:1px dashed #b9a67c;border-radius:3px;background:repeating-linear-gradient(45deg,rgba(120,95,50,.09) 0 5px,transparent 5px 10px);display:flex;align-items:center;justify-content:center;font:9.5px/1 ui-monospace,Menlo,monospace;color:#8a7c5c;letter-spacing:.06em">BANNER AD · 320×50</div>
+        <button onClick="{{ buyPro }}" style="all:unset;cursor:pointer;font-size:13px;font-style:italic;color:#a8781c;border-bottom:1px solid rgba(168,120,28,.4)">Remove ads forever — $3.99, once</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ proVisible }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;font-size:13px;font-style:italic;color:#57764b">Pro — no ads, ever. Thank you.</div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Race alt — "down the garden path". Vertical serpentine track, runners descend toward the gate; tap bar is a wooden mallet across the bottom.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="min-height:100%;box-sizing:border-box;padding:62px 0 26px;display:flex;flex-direction:column;background:#f4ecd6;background-image:radial-gradient(100% 60% at 50% 0%,rgba(255,255,255,.65),transparent 70%),repeating-linear-gradient(97deg,rgba(120,95,50,.05) 0 2px,transparent 2px 7px);font-family:'Newsreader',Georgia,serif;color:#2b271f">
+  <div style="padding:0 24px;display:flex;justify-content:space-between;align-items:baseline">
+    <div style="font-family:'Shadows Into Light',cursive;font-size:30px">Down the path</div>
+    <div style="font-family:'Shadows Into Light',cursive;font-size:26px;color:#a8781c">0:09</div>
+  </div>
+  <div style="position:relative;flex:1;margin:14px 20px 0;border:1px solid #cbbb95;border-radius:6px;overflow:hidden;background:linear-gradient(180deg,rgba(87,118,75,.1),rgba(168,120,28,.08))">
+    <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(120,95,50,.07) 0 26px,transparent 26px 54px)"></div>
+    <div style="position:absolute;left:50%;top:0;bottom:0;width:70px;transform:translateX(-50%);border-left:2px dashed rgba(43,39,31,.28);border-right:2px dashed rgba(43,39,31,.28)"></div>
+    <div style="position:absolute;left:18px;top:22px;width:14px;height:14px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(30deg);opacity:.6"></div>
+    <div style="position:absolute;right:26px;top:96px;width:18px;height:18px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(200deg);opacity:.45"></div>
+    <div style="position:absolute;left:30px;bottom:130px;width:12px;height:12px;background:#a8781c;border-radius:50%;opacity:.4"></div>
+    <div style="position:absolute;right:20px;bottom:60px;width:16px;height:16px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(120deg);opacity:.5"></div>
+    <div style="position:absolute;left:34%;top:56px;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:44px;height:36px;border-radius:8px;border:1.5px solid #a8781c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.14) 0 4px,transparent 4px 8px),rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font:7.5px/1.1 ui-monospace,Menlo,monospace;color:#7a6c4e;text-align:center">pizza<br>corgi</div>
+      <div style="font-family:'Shadows Into Light',cursive;font-size:14px;color:#a8781c">yours</div>
+    </div>
+    <div style="position:absolute;left:58%;top:132px;width:44px;height:36px;border-radius:8px;border:1.5px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.13) 0 4px,transparent 4px 8px);display:flex;align-items:center;justify-content:center;font:7.5px/1.1 ui-monospace,Menlo,monospace;color:#7a6c4e;text-align:center">thai<br>corgi</div>
+    <div style="position:absolute;left:36%;top:214px;width:44px;height:36px;border-radius:8px;border:1.5px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.13) 0 4px,transparent 4px 8px);display:flex;align-items:center;justify-content:center;font:7.5px/1.1 ui-monospace,Menlo,monospace;color:#7a6c4e;text-align:center">taco<br>corgi</div>
+    <div style="position:absolute;left:60%;top:286px;width:44px;height:36px;border-radius:8px;border:1.5px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.13) 0 4px,transparent 4px 8px);display:flex;align-items:center;justify-content:center;font:7.5px/1.1 ui-monospace,Menlo,monospace;color:#7a6c4e;text-align:center">ramen<br>corgi</div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:72px;border-top:2px solid rgba(43,39,31,.5);background:repeating-linear-gradient(90deg,rgba(43,39,31,.14) 0 12px,transparent 12px 24px);display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px">
+      <div style="font-family:'Shadows Into Light',cursive;font-size:24px">the garden gate</div>
+    </div>
+  </div>
+  <div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:10px;align-items:center">
+    <div style="font-size:13px;font-style:italic;color:#7d7460">Tap the mallet. Each strike is worth a whisker.</div>
+    <div style="width:100%;box-sizing:border-box;background:linear-gradient(180deg,#6b5340,#4c3b2c);color:#f7f0dd;padding:20px;border-radius:8px;text-align:center;font-family:'Shadows Into Light',cursive;font-size:38px;line-height:1;box-shadow:0 4px 0 rgba(43,39,31,.35),inset 0 1px 0 rgba(255,255,255,.14)">Let's Go!</div>
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.06em">37 TAPS · +0.9% TOTAL</div>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Result alt — seed-packet card. One hero pick full-bleed, the rest peeking as a stack; deep links stitched into the footer.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;background:#efe6cd;font-family:'Newsreader',Georgia,serif;color:#2b271f">
+  <div style="padding:64px 26px 16px;background:#57764b;color:#f4ecd6;background-image:repeating-linear-gradient(102deg,rgba(0,0,0,.06) 0 2px,transparent 2px 7px)">
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;opacity:.75">WON THE 8:12 DERBY</div>
+    <div style="font-family:'Shadows Into Light',cursive;font-size:52px;line-height:1;margin-top:6px">Ramen</div>
+    <div style="font-size:14px;font-style:italic;opacity:.85;margin-top:4px">by half a length, with 41 of your taps behind it</div>
+  </div>
+  <div style="margin:-14px 20px 0;border:1px solid #cbbb95;border-radius:6px;background:#f7f0dd;box-shadow:0 8px 20px rgba(43,39,31,.12);overflow:hidden">
+    <div style="height:104px;border-bottom:1px solid #cbbb95;background:repeating-linear-gradient(45deg,rgba(120,95,50,.11) 0 5px,transparent 5px 10px);display:flex;align-items:center;justify-content:center;font:10px/1 ui-monospace,Menlo,monospace;color:#8a7c5c;letter-spacing:.06em">STOREFRONT PHOTO · 16:9</div>
+    <div style="padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px">
+      <div>
+        <div style="font-family:'Shadows Into Light',cursive;font-size:34px;line-height:1.05">Wildwood Noodle Bar</div>
+        <div style="font-size:13.5px;color:#6b6250;margin-top:3px">4.6 · $$ · 1.8 mi · open till 10</div>
+      </div>
+      <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;text-align:center;padding:11px 0;background:#2b271f;color:#f7f0dd;border-radius:3px;font-size:14px">DoorDash</div>
+        <div style="flex:1;text-align:center;padding:11px 0;border:1px solid #2b271f;border-radius:3px;font-size:14px">Uber Eats</div>
+        <div style="flex:1;text-align:center;padding:11px 0;border:1px solid #2b271f;border-radius:3px;font-size:14px">Maps</div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:14px 26px 0;font-size:13px;font-style:italic;color:#7d7460">Three more within 6 mi</div>
+  <div style="padding:10px 20px 0;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid #d6c8a4;border-radius:5px;background:rgba(255,255,255,.4)">
+      <div style="width:38px;height:38px;flex:none;border-radius:7px;border:1px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.11) 0 4px,transparent 4px 8px)"></div>
+      <div style="flex:1"><div style="font-family:'Shadows Into Light',cursive;font-size:22px;line-height:1.1">Thistle &amp; Broth</div><div style="font-size:12.5px;color:#7d7460">4.4 · $$ · 2.6 mi</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid #d6c8a4;border-radius:5px;background:rgba(255,255,255,.4)">
+      <div style="width:38px;height:38px;flex:none;border-radius:7px;border:1px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.11) 0 4px,transparent 4px 8px)"></div>
+      <div style="flex:1"><div style="font-family:'Shadows Into Light',cursive;font-size:22px;line-height:1.1">Little Kettle</div><div style="font-size:12.5px;color:#7d7460">4.2 · $ · 3.9 mi</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid #d6c8a4;border-radius:5px;background:rgba(255,255,255,.4);opacity:.55">
+      <div style="width:38px;height:38px;flex:none;border-radius:7px;border:1px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.11) 0 4px,transparent 4px 8px)"></div>
+      <div style="flex:1"><div style="font-family:'Shadows Into Light',cursive;font-size:22px;line-height:1.1">Ember House</div><div style="font-size:12.5px;color:#7d7460">4.1 · $$ · 5.4 mi</div></div>
+    </div>
+  </div>
+  <div style="flex:1"></div>
+  <div style="padding:14px 20px 0;text-align:center;font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.06em">GOOGLE PLACES · RAMEN · ≤6MI · $$</div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Filters alt — three carved dials instead of sliders and chips. Slower to set, but it reads as a piece of furniture rather than a form.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="min-height:100%;box-sizing:border-box;padding:70px 26px 34px;display:flex;flex-direction:column;gap:24px;background:#f2e9d2;background-image:radial-gradient(90% 60% at 50% 8%,rgba(255,255,255,.6),transparent 70%),repeating-linear-gradient(94deg,rgba(120,95,50,.05) 0 2px,transparent 2px 7px);font-family:'Newsreader',Georgia,serif;color:#2b271f">
+  <div>
+    <div style="font-family:'Shadows Into Light',cursive;font-size:38px;line-height:1.05">Set the rules</div>
+    <div style="font-size:13.5px;font-style:italic;color:#6b6250;margin-top:4px">Turn each dial. It remembers where you left it.</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:center;gap:18px">
+      <div style="width:104px;height:104px;flex:none;border-radius:50%;background:radial-gradient(circle at 34% 28%,#8a6b48,#5b4630 70%);box-shadow:0 4px 0 rgba(43,39,31,.3),inset 0 2px 4px rgba(255,255,255,.2);position:relative;display:flex;align-items:center;justify-content:center">
+        <div style="position:absolute;top:9px;left:50%;width:3px;height:26px;background:#f2e9d2;transform:translateX(-50%) rotate(38deg);transform-origin:50% 44px;border-radius:2px"></div>
+        <div style="font-family:'Shadows Into Light',cursive;font-size:30px;color:#f2e9d2">$$</div>
+      </div>
+      <div><div style="font-family:'Shadows Into Light',cursive;font-size:26px">Budget</div><div style="font-size:13px;font-style:italic;color:#7d7460;margin-top:2px">Everyday-good, not a blowout</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:18px">
+      <div style="width:104px;height:104px;flex:none;border-radius:50%;background:radial-gradient(circle at 34% 28%,#7b8a5e,#4b5a3a 70%);box-shadow:0 4px 0 rgba(43,39,31,.3),inset 0 2px 4px rgba(255,255,255,.2);position:relative;display:flex;align-items:center;justify-content:center">
+        <div style="position:absolute;top:9px;left:50%;width:3px;height:26px;background:#f2e9d2;transform:translateX(-50%) rotate(-64deg);transform-origin:50% 44px;border-radius:2px"></div>
+        <div style="font-family:'Shadows Into Light',cursive;font-size:26px;color:#f2e9d2">6 mi</div>
+      </div>
+      <div><div style="font-family:'Shadows Into Light',cursive;font-size:26px">Distance</div><div style="font-size:13px;font-style:italic;color:#7d7460;margin-top:2px">Worth putting shoes on for</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:18px">
+      <div style="width:104px;height:104px;flex:none;border-radius:50%;background:radial-gradient(circle at 34% 28%,#9c7a3e,#6a5124 70%);box-shadow:0 4px 0 rgba(43,39,31,.3),inset 0 2px 4px rgba(255,255,255,.2);position:relative;display:flex;align-items:center;justify-content:center">
+        <div style="position:absolute;top:9px;left:50%;width:3px;height:26px;background:#f2e9d2;transform:translateX(-50%) rotate(122deg);transform-origin:50% 44px;border-radius:2px"></div>
+        <div style="font-family:'Shadows Into Light',cursive;font-size:34px;color:#f2e9d2">5</div>
+      </div>
+      <div><div style="font-family:'Shadows Into Light',cursive;font-size:26px">Field size</div><div style="font-size:13px;font-style:italic;color:#7d7460;margin-top:2px">Five runners on the card</div></div>
+    </div>
+  </div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <div style="padding:8px 14px;border:1px solid #2b271f;background:#2b271f;color:#f7f0dd;border-radius:999px;font-size:14px">Pizza</div>
+    <div style="padding:8px 14px;border:1px solid #2b271f;background:#2b271f;color:#f7f0dd;border-radius:999px;font-size:14px">Thai</div>
+    <div style="padding:8px 14px;border:1px solid #2b271f;background:#2b271f;color:#f7f0dd;border-radius:999px;font-size:14px">Tacos</div>
+    <div style="padding:8px 14px;border:1px solid #2b271f;background:#2b271f;color:#f7f0dd;border-radius:999px;font-size:14px">Ramen</div>
+    <div style="padding:8px 14px;border:1px solid #2b271f;background:#2b271f;color:#f7f0dd;border-radius:999px;font-size:14px">Burgers</div>
+    <div style="padding:8px 14px;border:1px dashed #b9a67c;color:#7d7460;border-radius:999px;font-size:14px">+ swap one</div>
+  </div>
+  <div style="flex:1"></div>
+  <div style="text-align:center;background:#2b271f;color:#f7f0dd;padding:16px;border-radius:4px;font-family:'Shadows Into Light',cursive;font-size:26px;box-shadow:0 3px 0 rgba(43,39,31,.28)">Fill the paddock</div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>The kit — parchment grounds, ink type scale, palette, and the border/motif vocabulary. Everything above pulls from here.</div>
+<div style="width:640px;box-sizing:border-box;padding:30px;border:1px solid #cbbb95;border-radius:8px;background:#f7f0dd;background-image:radial-gradient(120% 90% at 12% 0%,rgba(255,255,255,.7),transparent 60%),repeating-linear-gradient(102deg,rgba(120,95,50,.045) 0 2px,transparent 2px 6px);color:#2b271f;box-shadow:0 20px 40px rgba(43,39,31,.14);display:flex;flex-direction:column;gap:24px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">DISPLAY / INK</div>
+      <div style="font-family:'Shadows Into Light',cursive;font-size:46px;line-height:1">Shadows Into Light</div>
+      <div style="font-size:13px;font-style:italic;color:#7d7460">Headlines, numbers, buttons. Never body copy — it stops being legible under 18px.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">TEXT / PRESS</div>
+      <div style="font-size:30px;line-height:1.1">Newsreader <span style="font-style:italic">italic</span></div>
+      <div style="font-size:13px;font-style:italic;color:#7d7460">Body, labels, restaurant meta. Italic carries all the soft asides.</div>
+    </div>
+  </div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">PALETTE</div>
+    <div style="display:flex;gap:10px">
+      <div style="flex:1"><div style="height:56px;border-radius:4px;background:#f7f0dd;border:1px solid #cbbb95"></div><div style="font:9px/1.6 ui-monospace,Menlo,monospace;color:#8a7c5c;margin-top:5px">#F7F0DD parchment</div></div>
+      <div style="flex:1"><div style="height:56px;border-radius:4px;background:#e3d3b2"></div><div style="font:9px/1.6 ui-monospace,Menlo,monospace;color:#8a7c5c;margin-top:5px">#E3D3B2 foxed</div></div>
+      <div style="flex:1"><div style="height:56px;border-radius:4px;background:#2b271f"></div><div style="font:9px/1.6 ui-monospace,Menlo,monospace;color:#8a7c5c;margin-top:5px">#2B271F ink</div></div>
+      <div style="flex:1"><div style="height:56px;border-radius:4px;background:#a8781c"></div><div style="font:9px/1.6 ui-monospace,Menlo,monospace;color:#8a7c5c;margin-top:5px">#A8781C honey</div></div>
+      <div style="flex:1"><div style="height:56px;border-radius:4px;background:#57764b"></div><div style="font:9px/1.6 ui-monospace,Menlo,monospace;color:#8a7c5c;margin-top:5px">#57764B moss</div></div>
+    </div>
+    <div style="font-size:13px;font-style:italic;color:#7d7460">Two accents only. Honey marks the user's own runner and money; moss marks growth, wins and Pro. Nothing red, nothing neon — that's where casino creeps in.</div>
+  </div>
+  <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">MOTIFS &amp; RULES</div>
+      <div style="display:flex;align-items:center;gap:7px">
+        <div style="height:1px;flex:1;background:linear-gradient(90deg,transparent,#cbbb95)"></div>
+        <div style="width:9px;height:9px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(45deg);opacity:.75"></div>
+        <div style="width:6px;height:6px;background:#a8781c;border-radius:50%;opacity:.55"></div>
+        <div style="width:9px;height:9px;background:#57764b;border-radius:50% 0 50% 0;transform:rotate(225deg);opacity:.75"></div>
+        <div style="height:1px;flex:1;background:linear-gradient(270deg,transparent,#cbbb95)"></div>
+      </div>
+      <div style="height:1px;background:repeating-linear-gradient(90deg,#cbbb95 0 5px,transparent 5px 10px)"></div>
+      <div style="height:1px;background:#cbbb95"></div>
+      <div style="font-size:13px;font-style:italic;color:#7d7460">Leaves are one div — a circle with two corners squared off. Sprigs and berries only; no drawn branches until real illustration lands.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font:9.5px/1 ui-monospace,Menlo,monospace;color:#9b8f73;letter-spacing:.12em">ART SLOTS</div>
+      <div style="display:flex;gap:10px">
+        <div style="width:64px;height:54px;border-radius:9px;border:1px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.11) 0 4px,transparent 4px 8px);display:flex;align-items:center;justify-content:center;font:8px/1.15 ui-monospace,Menlo,monospace;color:#8a7c5c;text-align:center">runner<br>token</div>
+        <div style="flex:1;height:54px;border-radius:4px;border:1px dashed #b9a67c;background:repeating-linear-gradient(45deg,rgba(120,95,50,.09) 0 5px,transparent 5px 10px);display:flex;align-items:center;justify-content:center;font:9px/1 ui-monospace,Menlo,monospace;color:#8a7c5c;letter-spacing:.06em">BANNER AD · 320×50</div>
+      </div>
+      <div style="font-size:13px;font-style:italic;color:#7d7460">20 runner tokens needed (one per category) plus 6 ingredient avatars. Everything else is CSS, so the whole app ships as one asset pack.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "make <a class="dv-oid" href="#1a">1a</a>'s race look like <a class="dv-oid" href="#1b">1b</a>" · "swap <a class="dv-oid" href="#1a">1a</a>'s result screen for <a class="dv-oid" href="#1c">1c</a>" · "add the settings + Pro screen" · "show the almanac of past races"</p>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;raceSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:15,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:10,&quot;max&quot;:20,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;section&quot;:&quot;Race&quot;},&quot;showBannerAd&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Monetization&quot;},&quot;proUnlocked&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Monetization&quot;}}">
+const CU = [
+  {id:'pizza',name:'Pizza',tone:'#a8781c',silks:'honey and cream'},
+  {id:'burgers',name:'Burgers',tone:'#96573a',silks:'brick and oat'},
+  {id:'thai',name:'Thai',tone:'#57764b',silks:'moss and chalk'},
+  {id:'tacos',name:'Tacos',tone:'#8a6b2f',silks:'ochre stripes'},
+  {id:'ramen',name:'Ramen',tone:'#6b5340',silks:'walnut brown'},
+  {id:'sushi',name:'Sushi',tone:'#4f6f6a',silks:'slate green'},
+  {id:'bbq',name:'BBQ',tone:'#8c4a33',silks:'smoke and rust'},
+  {id:'curry',name:'Curry',tone:'#9d7a24',silks:'turmeric gold'}
+];
+const SLOT = {pizza:'pizza\ncorgi',burgers:'burger\ncorgi',thai:'thai\ncorgi',tacos:'taco\ncorgi',ramen:'ramen\ncorgi',sushi:'sushi\ncorgi',bbq:'bbq\ncorgi',curry:'curry\ncorgi'};
+const SPOTS = {
+  pizza:[['Nonna\u2019s Ember',4.7,1.1],['Fern & Flour',4.5,2.3],['The Stone Slab',4.3,3.6],['Crooked Chimney',4.1,5.2]],
+  burgers:[['The Copper Ladle',4.6,0.9],['Hazel & Hearth',4.4,2.1],['Bramble Grill',4.2,3.8],['Old Mill Diner',4.0,5.5]],
+  thai:[['Lemongrass Cottage',4.7,1.4],['Basil & Bell',4.5,2.6],['River Kitchen',4.3,4.0],['Thistle Table',4.1,5.8]],
+  tacos:[['Marigold Taqueria',4.6,1.2],['Casa Verde',4.4,2.4],['Little Comal',4.2,3.7],['Ember & Lime',4.0,5.1]],
+  ramen:[['Wildwood Noodle Bar',4.6,1.8],['Thistle & Broth',4.4,2.6],['Little Kettle',4.2,3.9],['Ember House',4.1,5.4]],
+  sushi:[['Stillwater Sushi',4.8,1.6],['Pine & Rice',4.5,2.9],['Blue Heron',4.2,4.3],['Quiet Counter',4.0,5.9]],
+  bbq:[['Smokehouse Lane',4.7,2.0],['The Long Pit',4.5,3.1],['Cedar & Ash',4.2,4.5],['Barnwood BBQ',4.0,6.0]],
+  curry:[['Saffron Cottage',4.6,1.3],['Turmeric & Thyme',4.4,2.7],['Clove Kitchen',4.2,4.1],['The Spice Shed',4.0,5.6]]
+};
+const AV = ['#a8781c','#57764b','#96573a','#4f6f6a','#8a6b2f','#6b5340'];
+const BUD = ['$','$$','$$$','$$$$'];
+const BOOST = 0.0004, BOOST_CAP = 0.05;
+const BLURB = ['by half a length','by a whisker','wire to wire','pulling away at the gate','on the nod'];
+
+class Component extends DCLogic {
+  state = {
+    screen:'profile', name:'', avatar:0, budget:2, distance:6,
+    picked:['pizza','burgers','thai','tacos','ramen'], runner:'thai',
+    prog:{}, taps:0, petals:[], elapsed:0, winner:null, pro:false, tapScale:1
+  };
+  componentWillUnmount(){ cancelAnimationFrame(this._raf); clearTimeout(this._to); }
+
+  _dur(){ return this.props.raceSeconds ?? 15; }
+
+  begin = () => {
+    const dur = this._dur();
+    const runners = {};
+    this.state.picked.forEach(id => {
+      runners[id] = {
+        p:0,
+        dur: dur*(0.86+Math.random()*0.28),
+        ph: Math.random()*6.3,
+        ph2: Math.random()*6.3,
+        boost:0
+      };
+    });
+    this._r = runners; this._t0 = performance.now(); this._last = performance.now(); this._pid = 0;
+    this.setState({screen:'race',taps:0,petals:[],elapsed:0,winner:null,prog:{}});
+    this._raf = requestAnimationFrame(this.tick);
+  };
+
+  tick = (now) => {
+    const dt = Math.min(0.05, (now - (this._last||now))/1000); this._last = now;
+    const el = (now - this._t0)/1000;
+    let done = null;
+    const prog = {};
+    Object.keys(this._r).forEach(id => {
+      const r = this._r[id];
+      const base = el / r.dur;
+      const wob = 0.055*Math.sin(el*1.9 + r.ph) + 0.032*Math.sin(el*4.3 + r.ph2);
+      r.p = Math.max(0, Math.min(1, base + wob*(1-Math.min(1,base)) + r.boost));
+      prog[id] = r.p;
+      if (r.p >= 1 && !done) done = id;
+    });
+    const petals = this.state.petals
+      .map(p => ({...p, life:p.life - dt, x:p.x + p.vx*dt, y:p.y + p.vy*dt, vy:p.vy + 60*dt, r:p.r + p.spin*dt}))
+      .filter(p => p.life > 0);
+    if (done) {
+      cancelAnimationFrame(this._raf);
+      this.setState({prog, petals, elapsed:el, winner:done});
+      this._to = setTimeout(()=>this.setState({screen:'result'}), 1100);
+      return;
+    }
+    this.setState({prog, petals, elapsed:el});
+    this._raf = requestAnimationFrame(this.tick);
+  };
+
+  tap = () => {
+    if (this.state.winner) return;
+    const r = this._r && this._r[this.state.runner];
+    if (!r) return;
+    r.boost = Math.min(BOOST_CAP, r.boost + BOOST);
+    const n = this.state.picked.indexOf(this.state.runner);
+    const y = 22 + n*66 + 34;
+    const x = 26 + r.p*310;
+    const add = [0,1,2].map(i => ({
+      key:'p'+(this._pid++), x:x+(Math.random()*18-9), y:y+(Math.random()*10-5),
+      vx:(Math.random()*70-35), vy:-(30+Math.random()*70), spin:Math.random()*420-210,
+      r:Math.random()*360, s:5+Math.random()*4, life:0.75,
+      c: i===1 ? '#a8781c' : '#57764b'
+    }));
+    this.setState(s => ({taps:s.taps+1, petals:[...s.petals, ...add].slice(-42)}));
+  };
+
+  renderVals(){
+    const s = this.state;
+    const showAd = (this.props.showBannerAd ?? true) && !s.pro && !(this.props.proUnlocked ?? false);
+    const byId = id => CU.find(c=>c.id===id) || CU[0];
+    const win = byId(s.winner || s.runner);
+    const spots = (SPOTS[win.id]||[]).slice(0, 4).map(([n,rt,d]) => ({
+      name:n, meta: rt.toFixed(1) + ' · ' + BUD[s.budget-1] + ' · ' + d.toFixed(1) + ' mi',
+      links:[
+        {label:'DoorDash', bg:'#2b271f', fg:'#f7f0dd', border:'#2b271f'},
+        {label:'Uber Eats', bg:'transparent', fg:'#2b271f', border:'#2b271f'},
+        {label:'Maps', bg:'transparent', fg:'#2b271f', border:'#2b271f'}
+      ]
+    }));
+    const mm = Math.floor(s.elapsed/60), ss = Math.floor(s.elapsed%60);
+    const leader = s.picked.slice().sort((a,b)=>(s.prog[b]||0)-(s.prog[a]||0))[0];
+    return {
+      isProfile: s.screen==='profile', isFilters: s.screen==='filters',
+      isLobby: s.screen==='lobby', isRace: s.screen==='race', isResult: s.screen==='result',
+      name: s.name,
+      setName: e => this.setState({name:e.target.value}),
+      avatars: AV.map((tone,i) => ({
+        tone, rot: 30+i*47,
+        bg: i===s.avatar ? 'rgba(255,255,255,.72)' : 'rgba(255,255,255,.34)',
+        ring: i===s.avatar ? '2px solid #2b271f' : '1px solid #cbbb95',
+        shadow: i===s.avatar ? '0 3px 0 rgba(43,39,31,.22)' : 'none',
+        pick: () => this.setState({avatar:i})
+      })),
+      toFilters: () => this.setState({screen:'filters'}),
+      budgets: BUD.map((label,i) => ({
+        label, pick: () => this.setState({budget:i+1}),
+        bg: s.budget===i+1 ? '#2b271f' : 'rgba(255,255,255,.4)',
+        fg: s.budget===i+1 ? '#f7f0dd' : '#2b271f',
+        border: s.budget===i+1 ? '#2b271f' : '#cbbb95'
+      })),
+      distance: s.distance,
+      setDistance: e => this.setState({distance:+e.target.value}),
+      distanceLabel: s.distance + (s.distance===1?' mile':' miles'),
+      cuisineChips: CU.map(c => {
+        const on = s.picked.includes(c.id);
+        return {
+          name:c.name, dot: on ? '#f7f0dd' : c.tone,
+          bg: on ? '#2b271f' : 'rgba(255,255,255,.4)',
+          fg: on ? '#f7f0dd' : '#2b271f',
+          border: on ? '#2b271f' : '#cbbb95',
+          toggle: () => this.setState(st => {
+            const has = st.picked.includes(c.id);
+            if (has && st.picked.length <= 3) return null;
+            const picked = has ? st.picked.filter(x=>x!==c.id) : (st.picked.length>=6 ? st.picked : [...st.picked, c.id]);
+            return {picked, runner: picked.includes(st.runner) ? st.runner : picked[0]};
+          })
+        };
+      }),
+      fieldLabel: s.picked.length + ' of 8 · three minimum',
+      startLabel: s.picked.length >= 3 ? 'Fill the paddock' : 'Pick three or more',
+      startBg: s.picked.length >= 3 ? '#2b271f' : '#8f8874',
+      toLobby: () => { if (s.picked.length >= 3) this.setState({screen:'lobby'}); },
+      raceLenLabel: 'about ' + this._dur() + ' seconds',
+      roster: s.picked.map(id => {
+        const c = byId(id); const on = s.runner===id;
+        return {
+          name:c.name, silks:c.silks, slot:SLOT[id],
+          bg: on ? 'rgba(255,255,255,.66)' : 'rgba(255,255,255,.34)',
+          border: on ? '#2b271f' : '#cbbb95',
+          shadow: on ? '0 3px 0 rgba(43,39,31,.2)' : 'none',
+          dotBorder: on ? '#2b271f' : '#b9a67c',
+          dotBg: on ? '#a8781c' : 'transparent',
+          pick: () => this.setState({runner:id})
+        };
+      }),
+      startRace: this.begin,
+      lanes: s.picked.map(id => {
+        const c = byId(id); const mine = s.runner===id;
+        return {
+          name:c.name, tone:c.tone, slot:SLOT[id],
+          left: ((s.prog[id]||0)*100).toFixed(2) + '%',
+          tokenBorder: mine ? 'solid' : 'dashed',
+          tokenBg: mine ? 'rgba(255,255,255,.62)' : 'rgba(255,255,255,.24)',
+          tokenShadow: mine ? '0 2px 0 rgba(43,39,31,.22)' : 'none',
+          mineOpacity: mine ? 1 : 0
+        };
+      }),
+      petals: s.petals,
+      clock: mm + ':' + String(ss).padStart(2,'0'),
+      raceHeadline: s.winner ? 'Photo finish' : (s.elapsed < 2 ? 'And they\u2019re off' : byId(leader).name + ' leads'),
+      tapHint: s.winner ? byId(s.winner).name + ' takes it.' : 'Tap for ' + byId(s.runner).name + '. Every tap is a whisker.',
+      tapMeta: s.taps + ' TAPS · +' + (Math.min(BOOST_CAP, s.taps*BOOST)*100).toFixed(2) + '%',
+      tapBg: s.winner ? '#8f8874' : '#2b271f',
+      tapScale: 1,
+      tap: this.tap,
+      winnerName: win.name,
+      winnerBlurb: BLURB[(s.taps + win.name.length) % BLURB.length] + ', with ' + s.taps + ' of your taps behind it',
+      queryLine: 'GOOGLE PLACES · ' + win.name.toUpperCase() + ' · ≤' + s.distance + 'MI · ' + BUD[s.budget-1],
+      spots,
+      again: () => this.setState({screen:'lobby'}),
+      adVisible: showAd,
+      proVisible: !showAd,
+      buyPro: () => this.setState({pro:true})
+    };
+  }
+}
+
+</script>
+</body>
+</html>
